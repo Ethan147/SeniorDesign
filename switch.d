@@ -1,0 +1,11 @@
+.\switch.o: switch.c
+.\switch.o: switch.h
+.\switch.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\switch.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\switch.o: ..\inc/tm4c123gh6pm.h
+.\switch.o: lcd.h
+.\switch.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h
+.\switch.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\switch.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\switch.o: ST7735.h
+.\switch.o: timer.h

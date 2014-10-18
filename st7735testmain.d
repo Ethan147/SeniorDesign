@@ -1,0 +1,16 @@
+.\st7735testmain.o: ST7735TestMain.c
+.\st7735testmain.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\st7735testmain.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\st7735testmain.o: ST7735.h
+.\st7735testmain.o: ..\inc/tm4c123gh6pm.h
+.\st7735testmain.o: PLL.h
+.\st7735testmain.o: timer.h
+.\st7735testmain.o: lcd.h
+.\st7735testmain.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h
+.\st7735testmain.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\st7735testmain.o: switch.h
+.\st7735testmain.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\st7735testmain.o: lcd.h
+.\st7735testmain.o: DAC.h
+.\st7735testmain.o: motor.h
+.\st7735testmain.o: ADC.h

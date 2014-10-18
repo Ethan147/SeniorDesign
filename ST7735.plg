@@ -1,0 +1,27 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+E:\Dropbox\ArmBook\LaunchPad\LaunchPadware\ST7735_4F120\ST7735.uvproj
+Project File Date:  05/14/2014
+
+<h2>Output:</h2>
+Load "E:\\Dropbox\\ArmBook\\LaunchPad\\LaunchPadware\\ST7735_4F120\\ST7735.axf" 
+_____^
+*** error 56: cannot open file
+Rebuild target 'ST7735'
+assembling startup.s...
+compiling PLL.c...
+compiling ST7735.c...
+compiling ST7735TestMain.c...
+ST7735TestMain.c(576): warning:  #111-D: statement is unreachable
+compiling SysTick.c...
+linking...
+Program Size: Code=5288 RO-data=14408 RW-data=8 ZI-data=1120  
+".\ST7735.axf" - 0 Errors, 1 Warning(s).
+Load "E:\\Dropbox\\ArmBook\\LaunchPad\\LaunchPadware\\ST7735_4F120\\ST7735.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.

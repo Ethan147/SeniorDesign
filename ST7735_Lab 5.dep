@@ -1,0 +1,70 @@
+Dependencies for Project 'ST7735', Target 'Lab 5': (DO NOT MODIFY !)
+F (.\startup.s)(0x5435BBD1)(--cpu Cortex-M4.fp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
+F (.\PLL.c)(0x54174DBE)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\pll.o --omf_browse .\pll.crf --depend .\pll.d)
+I (PLL.h)(0x54134DCA)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+F (.\ST7735.c)(0x542DC673)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\st7735.o --omf_browse .\st7735.crf --depend .\st7735.d)
+I (ST7735.h)(0x542DC670)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+F (.\ST7735TestMain.c)(0x5442C543)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\st7735testmain.o --omf_browse .\st7735testmain.crf --depend .\st7735testmain.d)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (ST7735.h)(0x542DC670)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+I (PLL.h)(0x54134DCA)
+I (timer.h)(0x5435998E)
+I (lcd.h)(0x542DDA6B)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C89844)
+I (switch.h)(0x542F6F73)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C89844)
+I (DAC.h)(0x54322437)
+I (motor.h)(0x542B4BE5)
+I (ADC.h)(0x5435841B)
+F (.\lcd.c)(0x542DDA90)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\lcd.o --omf_browse .\lcd.crf --depend .\lcd.d)
+I (lcd.h)(0x542DDA6B)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+I (ST7735.h)(0x542DC670)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C89844)
+F (.\timer.c)(0x5442C543)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\timer.o --omf_browse .\timer.crf --depend .\timer.d)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (timer.h)(0x5435998E)
+I (switch.h)(0x542F6F73)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C89844)
+I (lcd.h)(0x542DDA6B)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (ST7735.h)(0x542DC670)
+I (DAC.h)(0x54322437)
+I (PWM.h)(0x53E963BE)
+F (.\switch.c)(0x5442C510)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\switch.o --omf_browse .\switch.crf --depend .\switch.d)
+I (switch.h)(0x542F6F73)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C89844)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+I (lcd.h)(0x542DDA6B)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (ST7735.h)(0x542DC670)
+I (timer.h)(0x5435998E)
+F (.\DAC.c)(0x54322437)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\dac.o --omf_browse .\dac.crf --depend .\dac.d)
+I (DAC.h)(0x54322437)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+F (.\motor.c)(0x54359778)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\motor.o --omf_browse .\motor.crf --depend .\motor.d)
+I (motor.h)(0x542B4BE5)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (..\inc/tm4c123gh6pm.h)(0x53E6773A)
+F (.\ADC.c)(0x543C3A8B)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_LM4F120H5QR -DTM4C1231C3PM-o .\adc.o --omf_browse .\adc.crf --depend .\adc.d)
+I (ADC.h)(0x5435841B)
