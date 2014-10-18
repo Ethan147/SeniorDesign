@@ -5,6 +5,8 @@
 // Victor Vo and Alex Taft
 // January 28, 2014
 
+#include "inc/tm4c123gh6pm.h"
+
 extern unsigned short ADC_SampleBuffer[];
 
 //------------------ADC_EnableTimer------------------
