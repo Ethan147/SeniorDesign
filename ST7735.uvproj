@@ -441,11 +441,6 @@
               <FilePath>.\switch.c</FilePath>
             </File>
             <File>
-              <FileName>Music.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Music.c</FilePath>
-            </File>
-            <File>
               <FileName>DAC.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\DAC.c</FilePath>

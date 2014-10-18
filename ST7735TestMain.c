@@ -85,6 +85,7 @@ int main(void)
 	//uint8_t data = 0;
 	//DAC_Init(data);
 	PWM0A_Init();
+	//ADC0_InitSWTriggerSeq3_Ch9();
 	
 	// Initialization of Software
 	
@@ -115,8 +116,8 @@ char number[10];
 		counter += 1;
 		if ( !(counter % 1000000 ) )
 		{
-			//ADCvalue = ADC_In(0,1);
-			sprintf(number, "ADC: %05d", (int)AdcIn1);
+			//long result = ADC0_InSeq3();
+			sprintf(number, "ADC: %05d", (int)result);
 			ST7735_SetCursor(0, 1);
 			printf(number);
 		}			

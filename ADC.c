@@ -1,5 +1,7 @@
 #include "ADC.h"
 
+
+// PE4 becomes an input and is sampled on an input trigger
 void ADC0_InitSWTriggerSeq3_Ch9(void){ volatile unsigned long delay;
   SYSCTL_RCGC2_R |= 0x00000010;   // 1) activate clock for Port E
   delay = SYSCTL_RCGC2_R;         //    allow time for clock to stabilize

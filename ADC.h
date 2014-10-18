@@ -9,6 +9,9 @@
 
 extern unsigned short ADC_SampleBuffer[];
 
+void ADC0_InitSWTriggerSeq3_Ch9(void);
+unsigned long ADC0_InSeq3(void);
+
 //------------------ADC_EnableTimer------------------
 //Enables Timer0A to be associated with the ADC to a frequency specified
 //by the user. For the purpose of this lab it will most likely be 10 kHz.
