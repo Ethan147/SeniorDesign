@@ -38,7 +38,7 @@
 #include "ST7735.h"
 #include "PLL.h"
 #include "inc/tm4c123gh6pm.h"
-#include "timer.h"
+//#include "timer.h"
 #include "lcd.h"
 #include "switch.h"
 #include "DAC.h"
@@ -68,6 +68,7 @@ void WaitForInterrupt(void);  // low power mode
 
 unsigned long AdcIn1, AdcIn2, AdcIn3, AdcIn4;
 uint32_t* 	songPointer;
+unsigned long ADCvalue;
 
 /* Implementation */
 
@@ -80,17 +81,17 @@ int main(void)
 /* Initialization */
 	// Initialization of Hardware
 	PLL_Init();
-	Output_Init();
-	Switch_Init();
+	//Switch_Init();
 	//uint8_t data = 0;
 	//DAC_Init(data);
-	PWM0A_Init();
+	//PWM0A_Init();
 	//ADC0_InitSWTriggerSeq3_Ch9();
 	
 	// Initialization of Software
 	
 	// Timer Interrupt Initialization
-	Timer0A_Init(INTPERIOD>>6);
+  ADC0_InitSWTriggerSeq3(0);            // allow time to finish activating
+	//Timer0A_Init(INTPERIOD>>6);
 	//Timer1A_Init(INTPERIOD>>4);		//65 ms
 	//Initializes interrupt for first note's frequency
 	//Initializes interrupt for changing to next note
@@ -98,6 +99,7 @@ int main(void)
 	
 	//Timer3A_Init(notes[songPtr.curSong][0][LENGTH]);
 	// Activate Interrupts
+	Output_Init();
 	EnableInterrupts(); 
 	
 	ST7735_InitR(INITR_REDTAB);
@@ -116,7 +118,7 @@ char number[10];
 		counter += 1;
 		if ( !(counter % 1000000 ) )
 		{
-			//long result = ADC0_InSeq3();
+			long result = ADC0_InSeq3();
 			sprintf(number, "ADC: %05d", (int)result);
 			ST7735_SetCursor(0, 1);
 			printf(number);
