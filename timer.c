@@ -1,4 +1,4 @@
-// Timer0A.c
+// timer.c
 // Runs on LM4F120/TM4C123
 // Use Timer0A in periodic mode to request interrupts at a particular
 // period.
@@ -31,7 +31,6 @@
 #include "inc/tm4c123gh6pm.h"
 #include "timer.h"
 #include "switch.h"
-#include "DAC.h"
 #include "PWM.h"
 
 /* Constants */
@@ -49,31 +48,47 @@
                                             // Interrupt
 #define TIMER_TAILR_TAILRL_M    0x0000FFFF  // GPTM TimerA Interval Load
                                             // Register Low
-																						
-const unsigned short TempSinWave[32] = 
-	{  
-		1024,1122,1215,1302,1378,1440,1486,1514,1524,1514,1486,
-		1440,1378,1302,1215,1122,1024,926,833,746,670,608,
-		562,534,524,534,562,608,670,746,833,926
-	}; 
-	
-	
 
 #define MAX_CHECKS 3	// # checks before a switch is debounced
 uint8_t Debounced_State = 0;	// Debounced state of the switches
 uint8_t State[MAX_CHECKS];	// Array that maintains bounce status
 uint8_t Index = 0;	// Pointer into State	
 	
+/* Sine Data LookUp Table */
+//static const uint16_t sineTableOrig[256]={2884,2954,3025,3095,3165,3235,3305,3375,3444,3512,
+//                                3581,3648,3715,3782,3848,3914,3978,4042,4105,4168,
+//                                4229,4290,4349,4408,4466,4522,4578,4633,4686,4738,
+//                                4789,4839,4887,4934,4980,5024,5067,5109,5149,5187,
+//                                5224,5260,5294,5326,5357,5387,5414,5440,5465,5487,
+//                                5508,5528,5545,5561,5575,5588,5598,5607,5614,5614,
+//                                5614,5614,5614,5614,5614,5614,5607,5598,5588,5575,
+//                                5561,5545,5528,5508,5487,5465,5440,5414,5387,5357,
+//                                5326,5294,5260,5224,5187,5149,5109,5067,5024,4980,
+//                                4934,4887,4839,4789,4738,4686,4633,4578,4522,4466,
+//                                4408,4349,4290,4229,4168,4105,4042,3978,3914,3848,
+//                                3782,3715,3648,3581,3512,3444,3375,3305,3235,3165,
+//                                3095,3025,2954,2884,2813,2742,2672,2601,2531,2461,
+//                                2391,2321,2251,2182,2114,2045,1978,1911,1844,1778,
+//                                1712,1648,1584,1521,1458,1397,1336,1277,1218,1160,
+//                                1104,1048,993,940,888,837,787,739,692,646,602,559,
+//                                517,477,439,402,366,332,300,269,239,212,186,161,
+//                                139,118,98,81,65,51,38,28,19,12,10,10,10,10,10,10,
+//                                12,19,28,38,51,65,81,98,118,139,161,186,212,239,
+//                                269,300,332,366,402,439,477,517,559,602,646,692,
+//                                739,787,837,888,940,993,1048,1104,1160,1218,1277,
+//                                1336,1397,1458,1521,1584,1648,1712,1778,1844,1911,
+//                                1978,2045,2114,2182,2251,2321,2391,2461,2531,2601,
+//                                2672,2742,2813,2884,2954,3025,3095,3165,3235,
+//}; 
 
 /* Externs */
-extern bool debounce;
-extern uint8_t timerCount;
 
 /* Prototypes */	
+
+float FloatMultiply(float x, float y);
 	
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
-bool DebounceSwitch2(void);
 
 /* Implementation */	
 
@@ -204,19 +219,29 @@ void Timer3A_Init( uint32_t period)
 // and sets new duty cycle. Period is TODO ms.
 // Inputs:  none
 // Outputs: none
+	float sineOutput = 3.14;
+	uint16_t castFloat;
 void Timer0A_Handler(void){
 	int32_t sr;
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
 	sr = StartCritical();
 	
 	phaseOne += 1;
-	//phaseOne &= 0x0FF;
-	if(phaseOne == 256)
-	{
-		phaseOne = 0;
-	}
+	phaseOne &= 0x0FF;
 	
-	PWM0A_Duty( (uint16_t) (sineTable[phaseOne] * 39800));
+	phaseTwo += 1;
+	phaseTwo &= 0x0FF;
+
+	sineOutput = FloatMultiply(sineTable[phaseOne], 39800.0);
+	castFloat = sineOutput;
+	PWM0A_Duty( castFloat);
+	//PWM0A_Duty( (uint16_t) (sineTableOrig[phaseOne]));
+	
+	sineOutput = FloatMultiply(sineTable[phaseTwo], 39800.0);
+	castFloat = sineOutput;
+	PWM1A_Duty( castFloat);
+	//PWM0A_Duty( (uint16_t) (sineTableOrig[phaseOne]));	
+	
 	EndCritical(sr);
 }
 
@@ -242,7 +267,6 @@ void Timer1A_Handler(void)
 		lastVal = curVal;
 }
 
-//Moves to the next note
 // ***************** Timer2A_Handler ****************
 // Fire Timer2A interrupt. Moves the song pointer to
 // the next note of the song.
@@ -251,14 +275,14 @@ void Timer1A_Handler(void)
 //Controler for PWM
 //Executes once every 10 ms
 void Timer2A_Handler(void)
-{long sr; int32_t P;
+{
+	long sr;
 	TIMER2_ICR_R = 0x01;
 	sr = StartCritical();
+	
 	EndCritical(sr);
-	PWM0A_Duty(P);
 }
 
-//Moves to the next note
 // ***************** Timer2B_Handler ****************
 // Fire Timer2B interrupt. Moves the song pointer to
 // the next note of the song.
@@ -269,18 +293,7 @@ void Timer3A_Handler(void)
 	int32_t sr;
   TIMER3_ICR_R = 0x000000001;// acknowledge timer2B timeout
 	sr = StartCritical();
-//	songPtr.notePtr ++;
-//	//Restarts song if at the end of the note
-//	if(songPtr.notePtr >= songPtr.songLen)
-//		songPtr.notePtr = 0;
-//		//Music_NextSong();
-//	//Sets time between updates of the DAQ
-//	//Basically the frequency
-//	TIMER0_TAILR_R = (uint32_t)notes[songPtr.curSong][songPtr.notePtr][NOTE];
-//	//Sets number of cycles until the next note
-//	TIMER2_TAILR_R = (uint32_t)notes[songPtr.curSong][songPtr.notePtr][LENGTH];
-//	Music_SetEnvelope();
-//	printf("Interrupt 2 Processed");
+
 	EndCritical(sr);
 }
 

@@ -21,6 +21,23 @@
  http://users.ece.utexas.edu/~valvano/
  */
 
+#include <stdint.h>
+#include "inc/tm4c123gh6pm.h"
+
+#define PWM_PERIOD							40000	//Period of the PWM in 12.5 ns clock cycles
+#define ERROR_CONSTANT 2		//Error constant; Larger = More Responsive, less stable
+#define PRO_CONSTANT 8
+#define INTEGRAL_PERIOD 4	//Integral period; Smaller = Better percision, but more noise
+#define DEFAULT_RPS	250			//Starting speed in 0.1 rps increments
+
+#define PWM_0_GENA_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+#define PWM_0_GENA_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
+#define PWM_0_GENB_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+#define PWM_0_GENB_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
+
+#define SYSCTL_RCC_USEPWMDIV    0x00100000  // Enable PWM Clock Divisor
+#define SYSCTL_RCC_PWMDIV_M     0x000E0000  // PWM Unit Clock Divisor
+#define SYSCTL_RCC_PWMDIV_2     0x00000000  // /2
 
 // period is 16-bit number of PWM clock cycles in one period (3<=period)
 // period for PB6 and PB7 must be the same
@@ -28,23 +45,22 @@
 // PWM clock rate = processor clock rate/SYSCTL_RCC_PWMDIV
 //                = BusClock/2 
 //                = 80 MHz/2 = 40 MHz (in this example)
+
 // Output on PB6/M0PWM0
-void PWM0A_Init(uint16_t period, uint16_t duty);
+void PWM0A_Init(void);
 
 // change duty cycle of PB6
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0A_Duty(uint16_t duty);
 
-// period is 16-bit number of PWM clock cycles in one period (3<=period)
-// period for PB6 and PB7 must be the same
-// duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
-// PWM clock rate = processor clock rate/SYSCTL_RCC_PWMDIV
-//                = BusClock/2 
-//                = 80 MHz/2 = 40 MHz (in this example)
-// Output on PB7/M0PWM1
-void PWM0B_Init(uint16_t period, uint16_t duty);
+void PWM1A_Init(void);
 
-// change duty cycle of PB7
-// duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
-void PWM0B_Duty(uint16_t duty);
+void PWM1A_Duty(uint16_t duty);
 
+//Turns on alarm sound
+void Motor_On(void);
+
+//Turns off alarm sound
+void Motor_Off(void);
+
+void setDesiredSpeed(uint32_t newSpeed);

@@ -1,4 +1,4 @@
-// Timer0A.h
+// timer.h
 // Runs on LM4F120/TM4C123
 // Use Timer0A in periodic mode to request interrupts at a particular
 // period.
@@ -22,8 +22,8 @@
  http://users.ece.utexas.edu/~valvano/
  */
 
-#ifndef __TIMER0AINTS_H__ // do not include more than once
-#define __TIMER0AINTS_H__
+#ifndef __TIMER_H__ // do not include more than once
+#define __TIMER_H__
 
 #include <stdint.h>
 
@@ -86,8 +86,4 @@ void Timer2A_Enable(void);
 
 void Timer2A_Disable(void);
 
-void setNoteLength(uint32_t period);
-
-void setNoteFreq(uint32_t period);
-
-#endif // __TIMER0AINTS_H__
+#endif // __TIMER_H__

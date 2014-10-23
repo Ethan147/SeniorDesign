@@ -46,10 +46,8 @@
 // debugged or re-programmed.
 
 #include <stdint.h>
-#include <stdbool.h>
 
 #include "inc/tm4c123gh6pm.h"
-#include "lcd.h"
 #include "timer.h"
 
 //------------Switch_Init------------
@@ -101,5 +99,3 @@ void GPIOPortF_Handler(void);
 
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
-
-bool bDebounceSwitch2(uint8_t portData);

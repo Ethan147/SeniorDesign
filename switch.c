@@ -71,12 +71,7 @@ long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 
-bool DebounceSwitch2(void);
-
 /* Globals */
-
-bool debounce = 0;
-uint8_t timerCount = 0;
 
 /* Externs */
 
@@ -170,10 +165,3 @@ void GPIOPortF_Handler(void)
 	}
 }
 
-bool DebounceSwitch2() 
-{ 
-	static uint16_t State = 0; // Current debounce status 
-	State=(State<<1) | !(GPIO_PORTF_DATA_R & 0x0E) | 0xe000; 
-	if(State==0xf000)return 1; 
-	return 0; 
-} 
