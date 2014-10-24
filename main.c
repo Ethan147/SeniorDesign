@@ -94,7 +94,7 @@ char number[10];
 		counter += 1;
 		if ( !(counter % 1000000 ) )
 		{			
-			uint32_t data[4];
+			uint32_t data[6];
 			ADC_In89(data);
 			
 			sprintf(number, "ADC1: %05d", data[0]);
@@ -104,6 +104,22 @@ char number[10];
 			sprintf(number, "ADC2: %05d", data[1]);
 			ST7735_SetCursor(0, 1);
 			printf("%s", number);
+
+			sprintf(number, "ADC3: %05d", data[2]);
+			ST7735_SetCursor(0, 2);
+			printf("%s", number);
+			
+			sprintf(number, "ADC4: %05d", data[3]);
+			ST7735_SetCursor(0, 3);
+			printf("%s", number);
+			
+//			sprintf(number, "ADC5: %05d", data[4]);
+//			ST7735_SetCursor(0, 4);
+//			printf("%s", number);
+//			
+//			sprintf(number, "ADC6: %05d", data[5]);
+//			ST7735_SetCursor(0, 5);
+//			printf("%s", number);
 		}			
   }
 }	

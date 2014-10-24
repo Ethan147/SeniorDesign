@@ -1,0 +1,1 @@
+.\floatmultiply.o: FloatMultiply.s

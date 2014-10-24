@@ -88,7 +88,7 @@ void PWM0A_Duty(uint16_t duty){
 //                = 80 MHz/2 = 40 MHz (in this example)
 // Output on PB7/M0PWM1
 void PWM1A_Init(void){
-  SYSCTL_RCGCPWM_R |= 0x02;             				// 1) activate PWM1
+  SYSCTL_RCGCPWM_R |= 0x04;             				// 1) activate PWM1
   SYSCTL_RCGCGPIO_R |= 0x02;            				// 2) activate port B
   while((SYSCTL_PRGPIO_R&0x02) == 0){};
   GPIO_PORTB_AFSEL_R |= 0x10;           				// enable alt funct on PB4
@@ -100,13 +100,13 @@ void PWM1A_Init(void){
       (SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M));   
 	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_M;						//  configure for no divider
   //PWM0_0_CTL_R = 0;                     			// 4) re-loading down-counting mode
-	PWM0_2_CTL_R |= 0x00000001;
+	PWM0_1_CTL_R |= 0x00000001;
 	PWM0_ENABLE_R |= 0x00000001;									//Enable PWM
-  PWM0_2_GENA_R = 0xC8;                 				// low on LOAD, high on CMPA down
+  PWM0_1_GENA_R = 0xC8;                 				// low on LOAD, high on CMPA down
 																								// PB5 goes low on LOAD
 																								// PB5 goes high on CMPA down
-  PWM0_2_LOAD_R = PWM_PERIOD - 1;           		// 5) cycles needed to count down to 0
-  PWM0_2_CMPA_R = (PWM_PERIOD >> 1) - 1;        // 6) Start at 50% duty cycle
+  PWM0_1_LOAD_R = PWM_PERIOD - 1;           		// 5) cycles needed to count down to 0
+  PWM0_1_CMPA_R = (PWM_PERIOD >> 1) - 1;        // 6) Start at 50% duty cycle
 		
 }
 
@@ -114,7 +114,7 @@ void PWM1A_Init(void){
 // change duty cycle of PB5
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM1A_Duty(uint16_t duty){
-  PWM0_2_CMPA_R = duty - 1;             // 6) count value when output rises
+  PWM0_1_CMPA_R = duty - 1;             // 6) count value when output rises
 }
 
 

@@ -3,11 +3,4 @@
 .\timer.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
 .\timer.o: timer.h
 .\timer.o: switch.h
-.\timer.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
-.\timer.o: lcd.h
-.\timer.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h
-.\timer.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
-.\timer.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
-.\timer.o: ST7735.h
-.\timer.o: DAC.h
 .\timer.o: PWM.h
