@@ -1,0 +1,32 @@
+Dependencies for Project 'Lab04', Target 'Lab04': (DO NOT MODIFY !)
+F (.\main.c)(0x543C1F96)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\..-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-DTM4C123GH6PM-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\OS.h)(0x533B653D)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\ADC.h)(0x530C03C6)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\GPIO.h)(0x53158EAB)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\MACQ.h)(0x53290AD8)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\can0.h)(0x534DF7DA)
+I (C:\Users\Colin\Dropbox\Shared\Final\inc\tm4c123gh6pm.h)(0x5223A90F)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\PING.h)(0x5344AA3A)
+I (C:\Users\Colin\Dropbox\Shared\Final\Lab07_Sensor\PWM.h)(0x533B86B4)
+F (.\OS.c)(0x533B828B)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "os.o" --omf_browse "os.crf" --depend "os.d")
+F (.\TCB.c)(0x530CFE9E)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "tcb.o" --omf_browse "tcb.crf" --depend "tcb.d")
+F (.\SysTick.c)(0x531F15BF)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "systick.o" --omf_browse "systick.crf" --depend "systick.d")
+F (.\OS_Time.c)(0x531D8212)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "os_time.o" --omf_browse "os_time.crf" --depend "os_time.d")
+F (.\OS_Fifo.c)(0x531D835D)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "os_fifo.o" --omf_browse "os_fifo.crf" --depend "os_fifo.d")
+F (.\OS_Mailbox.c)(0x531D835D)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "os_mailbox.o" --omf_browse "os_mailbox.crf" --depend "os_mailbox.d")
+F (.\OS_Display.c)(0x5327F5BD)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "os_display.o" --omf_browse "os_display.crf" --depend "os_display.d")
+F (.\OS_Interpreter.c)(0x53224E0B)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "os_interpreter.o" --omf_browse "os_interpreter.crf" --depend "os_interpreter.d")
+F (.\OSasm.s)(0x53156390)(--device DCM --pd "__EVAL SETA 1" -g --apcs=interwork -I "C:\Keil\ARM\INC\TI\TM4C123" --list "OSasm.lst" --xref -o "OSasm.o")
+F (.\startup.s)(0x5315C306)(--device DCM --pd "__EVAL SETA 1" -g --apcs=interwork -I "C:\Keil\ARM\INC\TI\TM4C123" --list "startup.lst" --xref -o "startup.o")
+F (.\PLL.c)(0x51C2374A)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "pll.o" --omf_browse "pll.crf" --depend "pll.d")
+F (.\ST7735.c)(0x5327FA63)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "st7735.o" --omf_browse "st7735.crf" --depend "st7735.d")
+F (.\UART.c)(0x531561FA)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "uart.o" --omf_browse "uart.crf" --depend "uart.d")
+F (.\ADC.c)(0x543C18E1)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "adc.o" --omf_browse "adc.crf" --depend "adc.d")
+F (.\GPIO.c)(0x5315D539)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "gpio.o" --omf_browse "gpio.crf" --depend "gpio.d")
+F (.\can.c)(0x533355B8)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "can.o" --omf_browse "can.crf" --depend "can.d")
+F (.\can0.c)(0x5344A150)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "can0.o" --omf_browse "can0.crf" --depend "can0.d")
+F (.\Timer3.c)(0x533355BB)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "timer3.o" --omf_browse "timer3.crf" --depend "timer3.d")
+F (.\interrupt.c)(0x53344177)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "interrupt.o" --omf_browse "interrupt.crf" --depend "interrupt.d")
+F (.\PING.c)(0x5344B34D)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "ping.o" --omf_browse "ping.crf" --depend "ping.d")
+F (.\PWM.c)(0x533B8EBC)(-c --device DCM -D__EVAL -g -O0 --apcs=interwork -I.. -I..\..\.. -I..\driverlib\.. -I "C:\Keil\ARM\INC\TI\TM4C123" -o "pwm.o" --omf_browse "pwm.crf" --depend "pwm.d")
+F (.\cr4_fft_64_stm32.s)(0x52F2E4D2)(--device DCM --pd "__EVAL SETA 1" -g --apcs=interwork -I "C:\Keil\ARM\INC\TI\TM4C123" --list "cr4_fft_64_stm32.lst" --xref -o "cr4_fft_64_stm32.o")
