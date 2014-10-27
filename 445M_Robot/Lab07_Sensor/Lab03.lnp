@@ -1,0 +1,28 @@
+--cpu Cortex-M4
+".\main.o"
+".\os.o"
+".\tcb.o"
+".\systick.o"
+".\os_time.o"
+".\os_fifo.o"
+".\os_mailbox.o"
+".\os_display.o"
+".\os_interpreter.o"
+".\osasm.o"
+".\startup.o"
+".\pll.o"
+".\st7735.o"
+".\uart.o"
+".\adc.o"
+".\gpio.o"
+".\can.o"
+".\can0.o"
+".\timer3.o"
+".\interrupt.o"
+".\ping.o"
+".\pwm.o"
+".\cr4_fft_64_stm32.o"
+--strict --scatter ".\Lab03.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Lab03.map" -o .\Lab03.axf

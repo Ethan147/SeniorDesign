@@ -1,0 +1,10 @@
+.\can0.o: can0.c
+.\can0.o: hw_can.h
+.\can0.o: hw_ints.h
+.\can0.o: hw_memmap.h
+.\can0.o: hw_types.h
+.\can0.o: can.h
+.\can0.o: debug.h
+.\can0.o: interrupt.h
+.\can0.o: can0.h
+.\can0.o: ..\inc/tm4c123gh6pm.h
