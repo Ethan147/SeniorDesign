@@ -23,8 +23,6 @@
  */
  
 /********************** Includes ***********************/ 
- 
-#include <stdint.h>
 
 #include "inc/tm4c123gh6pm.h"
 #include "ADC.h"
@@ -60,25 +58,53 @@
 void ADC_Init89(void){ 
   volatile uint32_t delay;                         
 //  SYSCTL_RCGC0_R |= 0x00010000; // 1) activate ADC0 (legacy code)
-  SYSCTL_RCGCADC_R |= 0x00000001; // 1) activate ADC0
+  SYSCTL_RCGCADC_R |= 0x00000003; // 1) activate ADC0 and ADC1
   SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4; // 1) activate clock for Port E
   delay = SYSCTL_RCGCGPIO_R;      // 2) allow time for clock to stabilize
   delay = SYSCTL_RCGCGPIO_R;
   GPIO_PORTE_DIR_R &= ~0x3C;      // 3) make PE4 PE5 input
-  GPIO_PORTE_AFSEL_R |= 0x3C;     // 4) enable alternate function on PE4 PE5
-  GPIO_PORTE_DEN_R &= ~0x3C;      // 5) disable digital I/O on PE4 PE5
+  GPIO_PORTE_AFSEL_R |= 0x3C;     // 4) enable alternate function on PE0 - PE5
+  GPIO_PORTE_DEN_R &= ~0x3C;      // 5) disable digital I/O on PE0 - PE5
                                   // 5a) configure PE4 as ?? (skip this line because PCTL is for digital only)
-  GPIO_PORTE_PCTL_R = GPIO_PORTE_PCTL_R&0xFF00FFFF;
-  GPIO_PORTE_AMSEL_R |= 0x3C;     // 6) enable analog functionality on PE4 PE5
+  GPIO_PORTE_PCTL_R = GPIO_PORTE_PCTL_R&0xFF0000FF;
+  GPIO_PORTE_AMSEL_R |= 0x3C;     // 6) enable analog functionality on PE0 - PE5
+	
   ADC0_PC_R &= ~0xF;              // 8) clear max sample rate field
   ADC0_PC_R |= 0x1;               //    configure for 125K samples/sec
   ADC0_SSPRI_R = 0x3210;          // 9) Sequencer 3 is lowest priority
-  ADC0_ACTSS_R &= ~0x0001;        // 10) disable sample sequencer 2
-  ADC0_EMUX_R &= ~0x000F;         // 11) seq2 is software trigger
-  ADC0_SSMUX0_R = 0x00008910; // any order is ok         // 12) set channels for SS2
+  ADC0_ACTSS_R &= ~0x0001;        // 10) disable sample sequencer 0
+  ADC0_EMUX_R &= ~0x000F;         // 11) seq0 is software trigger
+  ADC0_SSMUX0_R = 0x23; 	        // 12) set channels for SS0
   ADC0_SSCTL0_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
-  ADC0_IM_R &= ~0x0001;           // 14) disable SS2 interrupts
-  ADC0_ACTSS_R |= 0x0001;         // 15) enable sample sequencer 2
+  ADC0_IM_R &= ~0x0001;           // 14) disable SS0 interrupts
+  ADC0_ACTSS_R |= 0x0001;         // 15) enable sample sequencer 0
+	
+  ADC0_ACTSS_R &= ~0x0002;        // 10) disable sample sequencer 1
+  ADC0_EMUX_R &= ~0x00F0;         // 11) seq1 is software trigger
+	ADC0_SSMUX1_R = 0x01;		        // 12) set channels for SS1
+  ADC0_SSCTL1_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
+  ADC0_IM_R &= ~0x0002;           // 14) disable SS1 interrupts
+  ADC0_ACTSS_R |= 0x0002;         // 15) enable sample sequencer 1
+	
+  ADC1_PC_R &= ~0xF;              // 8) clear max sample rate field
+  ADC1_PC_R |= 0x1;               //    configure for 125K samples/sec
+  ADC1_SSPRI_R = 0x3210;          // 9) Sequencer 3 is lowest priority
+  ADC1_ACTSS_R &= ~0x0001;        // 10) disable sample sequencer 2
+  ADC1_EMUX_R &= ~0x000F;         // 11) seq2 is software trigger
+  ADC1_SSMUX0_R = 0x89;         // 12) set channels for SS2
+  ADC1_SSCTL0_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
+  ADC1_IM_R &= ~0x0001;           // 14) disable SS2 interrupts
+  ADC1_ACTSS_R |= 0x0001;         // 15) enable sample sequencer 2
+
+  ADC1_PC_R &= ~0xF;              // 8) clear max sample rate field
+  ADC1_PC_R |= 0x1;               //    configure for 125K samples/sec
+  ADC1_SSPRI_R = 0x3210;          // 9) Sequencer 3 is lowest priority
+  ADC1_ACTSS_R &= ~0x0002;        // 10) disable sample sequencer 2
+  ADC1_EMUX_R &= ~0x00F0;         // 11) seq2 is software trigger
+  ADC1_SSMUX1_R = 0x45;         // 12) set channels for SS2
+  ADC1_SSCTL1_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
+  ADC1_IM_R &= ~0x0002;           // 14) disable SS2 interrupts
+  ADC1_ACTSS_R |= 0x0002;         // 15) enable sample sequencer 2
 }
 
 //------------ADC_In89------------
@@ -91,14 +117,40 @@ void ADC_Init89(void){
 // data returned by reference
 // data[0] is ADC8 (PE5) 0 to 4095
 // data[1] is ADC9 (PE4) 0 to 4095
-void ADC_In89(uint32_t data[6]){ 
+void ADC_In89(uint32_t data[4]){ 
   ADC0_PSSI_R = 0x0001;            // 1) initiate SS2
   while((ADC0_RIS_R&0x01)==0){};   // 2) wait for conversion done
-//  data[5] = ADC0_SSFIFO1_R&0xFFF;  // 3A) read first result
-//  data[4] = ADC0_SSFIFO1_R&0xFFF;  // 3B) read second result
-  data[3] = ADC0_SSFIFO0_R&0xFFF;  // 3A) read first result
-  data[2] = ADC0_SSFIFO0_R&0xFFF;  // 3B) read second result
-  data[1] = ADC0_SSFIFO0_R&0xFFF;  // 3A) read first result
-  data[0] = ADC0_SSFIFO0_R&0xFFF;  // 3B) read second result
-  ADC0_ISC_R = 0x0001;             // 4) acknowledge completion
+  data[0] = ADC0_SSFIFO0_R&0xFFF;  // 3A) read first result
+  data[1] = ADC0_SSFIFO0_R&0xFFF;  // 3B) read second result
+  ADC0_ISC_R = 0x0001;             // 4) acknowledge completion	
+	
+  ADC0_PSSI_R = 0x0002;            // 1) initiate SS2
+  while((ADC0_RIS_R&0x02)==0){};   // 2) wait for conversion done
+  data[2] = ADC0_SSFIFO1_R&0xFFF;  // 3A) read first result
+  data[3] = ADC0_SSFIFO1_R&0xFFF;  // 3B) read second result
+  ADC0_ISC_R = 0x0002;             // 4) acknowledge completion
+}
+
+//------------ADC_In10------------
+// Busy-wait Analog to digital conversion
+// Input: none
+// Output: two 12-bit result of ADC conversions
+// Samples ADC8 and ADC9 
+// 125k max sampling
+// software trigger, busy-wait sampling
+// data returned by reference
+// data[0] is ADC8 (PE5) 0 to 4095
+// data[1] is ADC9 (PE4) 0 to 4095
+void ADC_In10(uint32_t data[2]){ 
+  ADC1_PSSI_R = 0x0001;            // 1) initiate SS2
+  while((ADC1_RIS_R&0x01)==0){};   // 2) wait for conversion done
+  data[0] = ADC1_SSFIFO0_R&0xFFF;  // 3A) read first result
+  data[1] = ADC1_SSFIFO0_R&0xFFF;  // 3B) read second result
+  ADC1_ISC_R = 0x0001;             // 4) acknowledge completion	
+	
+  ADC1_PSSI_R = 0x0002;            // 1) initiate SS2
+  while((ADC1_RIS_R&0x02)==0){};   // 2) wait for conversion done
+  data[2] = ADC1_SSFIFO1_R&0xFFF;  // 3A) read first result
+  data[3] = ADC1_SSFIFO1_R&0xFFF;  // 3B) read second result
+  ADC1_ISC_R = 0x0002;             // 4) acknowledge completion
 }

@@ -21,7 +21,8 @@
  For more information about my classes, my research, and my books, see
  http://users.ece.utexas.edu/~valvano/
  */
-
+ 
+#include <stdint.h>
 
 // There are many choices to make when using the ADC, and many
 // different combinations of settings will all do basically the
@@ -63,4 +64,6 @@ void ADC_Init89(void);
 // data returned by reference
 // data[0] is ADC8 (PE5) 0 to 4095
 // data[1] is ADC9 (PE4) 0 to 4095
-void ADC_In89(uint32_t data[2]);
+void ADC_In89(uint32_t data[4]);
+
+void ADC_In10(uint32_t data[2]);

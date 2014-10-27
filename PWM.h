@@ -47,11 +47,13 @@
 //                = 80 MHz/2 = 40 MHz (in this example)
 
 // Output on PB6/M0PWM0
-void PWM0A_Init(void);
+void PWM0_0_Init(void);
 
 // change duty cycle of PB6
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
-void PWM0A_Duty(uint16_t duty);
+void PWM0_0A_Duty(uint16_t duty);
+
+void PWM0_0B_Duty(uint16_t duty);
 
 void PWM1A_Init(void);
 

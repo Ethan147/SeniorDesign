@@ -67,7 +67,7 @@ int main(void)
 	
 	ADC_Init89();
 	
-	PWM0A_Init();
+	PWM0_0_Init();
 	PWM1A_Init();	
 	
 // Software	
@@ -94,32 +94,43 @@ char number[10];
 		counter += 1;
 		if ( !(counter % 1000000 ) )
 		{			
-			uint32_t data[6];
+			uint32_t data[4];
+			
 			ADC_In89(data);
 			
-			sprintf(number, "ADC1: %05d", data[0]);
+			sprintf(number, "ADC PE0: %05d", data[0]);
 			ST7735_SetCursor(0, 0);
 			printf("%s", number);
 			
-			sprintf(number, "ADC2: %05d", data[1]);
+			sprintf(number, "ADC PE1: %05d", data[1]);
 			ST7735_SetCursor(0, 1);
 			printf("%s", number);
-
-			sprintf(number, "ADC3: %05d", data[2]);
+			
+			sprintf(number, "ADC PE2: %05d", data[2]);
 			ST7735_SetCursor(0, 2);
 			printf("%s", number);
 			
-			sprintf(number, "ADC4: %05d", data[3]);
+			sprintf(number, "ADC PE3: %05d", data[3]);
 			ST7735_SetCursor(0, 3);
 			printf("%s", number);
 			
-//			sprintf(number, "ADC5: %05d", data[4]);
-//			ST7735_SetCursor(0, 4);
-//			printf("%s", number);
-//			
-//			sprintf(number, "ADC6: %05d", data[5]);
-//			ST7735_SetCursor(0, 5);
-//			printf("%s", number);
+			ADC_In10(data);
+
+			sprintf(number, "ADC PE4: %05d", data[0]);
+			ST7735_SetCursor(0, 4);
+			printf("%s", number);
+			
+			sprintf(number, "ADC PE5: %05d", data[1]);
+			ST7735_SetCursor(0, 5);
+			printf("%s", number);
+			
+			sprintf(number, "ADC PD2: %05d", data[2]);
+			ST7735_SetCursor(0, 6);
+			printf("%s", number);
+			
+			sprintf(number, "ADC PD3: %05d", data[3]);
+			ST7735_SetCursor(0, 7);
+			printf("%s", number);
 		}			
   }
 }	
