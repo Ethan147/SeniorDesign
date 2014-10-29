@@ -1,9 +1,8 @@
 // timer.c
 // Runs on LM4F120/TM4C123
-// Use Timer0A in periodic mode to request interrupts at a particular
-// period.
-// Daniel Valvano
-// September 11, 2013
+// Use various timers to enact ADC, PWM, and switch management.
+// Team C
+// October 29, 2014
 
 /* This example accompanies the book
    "Embedded Systems: Introduction to ARM Cortex M Microcontrollers"
@@ -48,11 +47,8 @@
                                             // Interrupt
 #define TIMER_TAILR_TAILRL_M    0x0000FFFF  // GPTM TimerA Interval Load
                                             // Register Low
-
 #define MAX_CHECKS 3	// # checks before a switch is debounced
-uint8_t Debounced_State = 0;	// Debounced state of the switches
-uint8_t State[MAX_CHECKS];	// Array that maintains bounce status
-uint8_t Index = 0;	// Pointer into State	
+
 	
 /* Sine Data LookUp Table */
 //static const uint16_t sineTableOrig[256]={2884,2954,3025,3095,3165,3235,3305,3375,3444,3512,
@@ -82,6 +78,14 @@ uint8_t Index = 0;	// Pointer into State
 //}; 
 
 /* Externs */
+
+/* Globals */
+
+uint8_t Debounced_State = 0;	// Debounced state of the switches
+uint8_t State[MAX_CHECKS];	// Array that maintains bounce status
+uint8_t Index = 0;	// Pointer into State	
+float sineOutput = 3.14;
+uint16_t castFloat;
 
 /* Prototypes */	
 
@@ -118,9 +122,10 @@ void Timer0A_Init(uint32_t period)
 }
 
 // ***************** Timer1A_Init ****************
-// Activate Timer1A interrupts to run user task periodically
+// Activate Timer1A interrupts to check switch debouncing
 // Inputs:  Period value
 // Outputs: none
+// NOTE: Timer disabled on startup.
 void Timer1A_Init(uint32_t period)
 {
 	long sr;
@@ -141,8 +146,8 @@ void Timer1A_Init(uint32_t period)
 }
 
 // ***************** Timer2A_Init ****************
-// Activate Timer2A to change the note being played.
-// Varies with note length
+// Activate Timer2A to request an ADC sample and conversion.
+// Sequence interrupt is generated when the sample is ready.
 // Inputs:  Period length based on no idea at the moment. Combing files.
 // Outputs: none
 void Timer2A_Init(uint32_t period)
@@ -151,17 +156,18 @@ void Timer2A_Init(uint32_t period)
   sr = StartCritical(); 
   SYSCTL_RCGCTIMER_R |= 0x04;      // 0) activate timer2
   TIMER2_CTL_R &= ~0x00000001;     // 1) disable timer2A during setup
+	TIMER2_CTL_R |= 0x00000020;   	 // enable timer2A trigger to ADC
   TIMER2_CFG_R = 0x00000000;       // 2) configure for 32-bit timer mode
   TIMER2_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
   TIMER2_TAILR_R = period-1;       // 4) reload value
   TIMER2_TAPR_R = 0;               // 5) ??? Not sure what this step is doing
   TIMER2_ICR_R = 0x00000001;       // 6) clear timer2A timeout flag
-  TIMER2_IMR_R |= 0x00000001;      // 7) arm timeout interrupt
-  
+  TIMER2_IMR_R &= ~0x00000001;     // 7) disarm timeout interrupt
+  TIMER2_CTL_R |= 0x00000001;      //	8) enable timer2A
+	
 	NVIC_PRI5_R = (NVIC_PRI5_R&0x00FFFFFF)|0x80000000; // 8) priority 4
-  NVIC_EN0_R = NVIC_EN0_INT23;     // 9) enable interrupt 23 in NVIC
-  
-	//TIMER2_CTL_R |= 0x00000001;      // 10) enable timer2A. Do not init on start.
+  NVIC_EN0_R = NVIC_EN0_INT14;     // 9) enable interrupt 23 in NVIC
+
   EndCritical(sr);
 }
 
@@ -175,18 +181,18 @@ void Timer3A_Init( uint32_t period)
 	long sr;
   sr = StartCritical();
   SYSCTL_RCGCTIMER_R |= 0x08;   // 0) activate TIMER3
-  TIMER3_CTL_R = 0x00000000;    // 1) disable TIMER3A during setup
-  TIMER3_CFG_R = 0x00000000;    // 2) configure for 32-bit mode
-  TIMER3_TAMR_R = 0x00000002;   // 3) configure for periodic mode, default down-count settings
-  TIMER3_TAILR_R = period-1;    // 4) reload value
-  TIMER3_TAPR_R = 0;            // 5) bus clock resolution
-  TIMER3_ICR_R = 0x00000001;    // 6) clear TIMER0A timeout flag
-  TIMER3_IMR_R = 0x00000001;    // 7) arm timeout interrupt
-  NVIC_PRI4_R = (NVIC_PRI8_R&0x00FFFFFF)|0x80000000; // 8) priority 4
-// interrupts enabled in the main program after all devices initialized
-// vector number 35, interrupt number 19
-  NVIC_EN1_R = 1<<3;           // 9) enable IRQ 35 in NVIC
-  TIMER3_CTL_R = 0x00000001;    // 10) enable TIMER3A
+  TIMER3_CTL_R &= ~0x00000001;     // 1) disable timer3A during setup
+	TIMER3_CTL_R |= 0x00000020;   	 // enable timer2A trigger to ADC
+  TIMER3_CFG_R = 0x00000000;       // 2) configure for 32-bit timer mode
+  TIMER3_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
+  TIMER3_TAILR_R = period-1;       // 4) reload value
+  TIMER3_TAPR_R = 0;               // 5) ??? Not sure what this step is doing
+  TIMER3_ICR_R = 0x00000001;       // 6) clear timer3A timeout flag
+  TIMER3_IMR_R &= ~0x00000001;     // 7) disarm timeout interrupt
+  TIMER3_CTL_R |= 0x00000001;      //	8) enable timer3A
+	
+	NVIC_PRI5_R = (NVIC_PRI5_R&0x00FFFFFF)|0x80000000; // 8) priority 4
+  NVIC_EN0_R = NVIC_EN0_INT14;     // 9) enable interrupt 23 in NVIC
   EndCritical(sr);
 }
 
@@ -194,34 +200,34 @@ void Timer3A_Init( uint32_t period)
 // Activate Timer2B to change the note being played.
 // Varies with note length
 // Inputs:  Period length based on no idea at the moment. Combing files.
-//// Outputs: none
-//void Timer2B_Init(uint32_t period)
-//{
-//	long sr;
-//  sr = StartCritical(); 
-//  SYSCTL_RCGCTIMER_R |= 0x04;     	 // 0) activate timer2
-//  TIMER2_CTL_R &= ~0x00000100;    	 // 1) disable timer2B during setup
-//  TIMER2_CFG_R = 0x00000000;       	// 2) configure for 32-bit timer mode
-//  TIMER2_TBMR_R = 0x00000002;     	 // 3) configure for periodic mode, default down-count settings
-//  TIMER2_TBILR_R = period-1;       	// 4) reload value
-//  TIMER2_TBPR_R = 0;               	// 5) ??? Not sure what this step is doing
-//  TIMER2_ICR_R |= 0x00000100;       // 6) clear timer2B timeout flag
-//  TIMER2_IMR_R |= 0x00000100;      	// 7) arm timeout interrupt
-//  
-//	NVIC_PRI6_R = (NVIC_PRI6_R&0xFFFFFF00)|0x00000080; // 8) priority 4
-//  NVIC_EN0_R = NVIC_EN0_INT24;     // 9) enable interrupt 24 in NVIC
+// Outputs: none
+// NOTE: I've never gotten a B timer to work.
+void Timer2B_Init(uint32_t period)
+{
+	long sr;
+  sr = StartCritical(); 
+  SYSCTL_RCGCTIMER_R |= 0x04;     	 // 0) activate timer2
+  TIMER2_CTL_R &= ~0x00000100;    	 // 1) disable timer2B during setup
+  TIMER2_CFG_R = 0x00000000;       	// 2) configure for 32-bit timer mode
+  TIMER2_TBMR_R = 0x00000002;     	 // 3) configure for periodic mode, default down-count settings
+  TIMER2_TBILR_R = period-1;       	// 4) reload value
+  TIMER2_TBPR_R = 0;               	// 5) ??? Not sure what this step is doing
+  TIMER2_ICR_R |= 0x00000100;       // 6) clear timer2B timeout flag
+  TIMER2_IMR_R |= 0x00000100;      	// 7) arm timeout interrupt
+  
+	NVIC_PRI6_R = (NVIC_PRI6_R&0xFFFFFF00)|0x00000080; // 8) priority 4
+  NVIC_EN0_R = NVIC_EN0_INT24;     // 9) enable interrupt 24 in NVIC
 
-//  EndCritical(sr);
-//}
+  EndCritical(sr);
+}
 
 // ***************** Timer0A_Handler ****************
 // Fire Timer0A interrupt. Moves the SineWave output 
 // and sets new duty cycle. Period is TODO ms.
 // Inputs:  none
 // Outputs: none
-	float sineOutput = 3.14;
-	uint16_t castFloat;
-void Timer0A_Handler(void){
+void Timer0A_Handler(void)
+{
 	int32_t sr;
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
 	sr = StartCritical();
@@ -238,19 +244,14 @@ void Timer0A_Handler(void){
 	sineOutput = FloatMultiply(sineTable[phaseOne], 39800.0);
 	castFloat = sineOutput;
 	PWM0_0A_Duty( castFloat);
-	//PWM0A_Duty( (uint16_t) (sineTableOrig[phaseOne]));
 	
 	sineOutput = FloatMultiply(sineTable[phaseTwo], 39800.0);
 	castFloat = sineOutput;
-	//PWM1A_Duty( castFloat);
 	PWM0_0B_Duty( castFloat);
-	//PWM0A_Duty( (uint16_t) (sineTableOrig[phaseOne]));	
 	
 	sineOutput = FloatMultiply(sineTable[phaseThree], 39800.0);
 	castFloat = sineOutput;
-	//PWM1A_Duty( castFloat);
-	PWM1A_Duty( castFloat);
-	//PWM0A_Duty( (uint16_t) (sineTableOrig[phaseOne]));	
+	PWM0_1A_Duty( castFloat);
 
 	EndCritical(sr);
 }
@@ -278,52 +279,28 @@ void Timer1A_Handler(void)
 }
 
 // ***************** Timer2A_Handler ****************
-// Fire Timer2A interrupt. Moves the song pointer to
-// the next note of the song.
-// Inputs:  none
-// Outputs: none
-//Controler for PWM
-//Executes once every 10 ms
-void Timer2A_Handler(void)
-{
-	long sr;
-	TIMER2_ICR_R = 0x01;
-	sr = StartCritical();
-	
-	EndCritical(sr);
-}
+// This timer is tied to ADC0 sampling. As such
+// it does not have a timeout handler. It has
+// an ADC sequence handler.
+
+// ***************** Timer3A_Handler ****************
+// This timer is reserved for ADC1 sampling. As such
+// it does not have a timeout handler. It has
+// an ADC sequence handler.
 
 // ***************** Timer2B_Handler ****************
 // Fire Timer2B interrupt. Moves the song pointer to
 // the next note of the song.
 // Inputs:  none
 // Outputs: none
-void Timer3A_Handler(void)
+// NOTE: I've never gotten a B timer to successfully work.
+void Timer2B_Handler(void)
 {
 	int32_t sr;
-  TIMER3_ICR_R = 0x000000001;// acknowledge timer2B timeout
+  TIMER2_ICR_R = 0x000000001;// acknowledge timer2B timeout. This is wrong.
 	sr = StartCritical();
 
 	EndCritical(sr);
-}
-
-
-// ***************** Timer0A_Enable ****************
-// Enables Timer0A
-// Inputs:  none
-// Outputs: none
-void Timer0A_Enable(void)
-{
-	TIMER0_CTL_R |= 0x00000001;      //enable timer0A
-}
-
-// ***************** Timer0A_Disable ****************
-// Disables Timer0A
-// Inputs:  none
-// Outputs: none
-void Timer0A_Disable(void)
-{
-	TIMER0_CTL_R &= ~0x00000001;      //Disable timer0A
 }
 
 // ***************** Timer1A_Enable ****************
@@ -343,24 +320,4 @@ void Timer1A_Disable(void)
 {
 	TIMER1_CTL_R &= ~0x00000001;      //Disable timer1A
 }
-
-// ***************** Timer2A_Enable ****************
-// Enables Timer2A
-// Inputs:  none
-// Outputs: none
-void Timer2A_Enable(void)
-{
-	TIMER2_CTL_R |= 0x00000001;      //enable timer2A
-}
-
-// ***************** Timer0A_Disable ****************
-// Disables Timer0A
-// Inputs:  none
-// Outputs: none
-void Timer2A_Disable(void)
-{
-	TIMER2_CTL_R &= ~0x00000001;      //Disable timer2A
-}
-
-
 

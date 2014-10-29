@@ -46,24 +46,40 @@
 // software can transfer the conversion result to memory and
 // process it after all measurements are complete.
 
-// Initializes ADC8 and ADC9 sampling
+// Initializes ADC0 sampling
 // 125k max sampling
-// SS2 triggering event: software trigger, busy-wait sampling
-// SS2 1st sample source: Ain9 (PE4)
-// SS2 2nd sample source: Ain8 (PE5)
-// SS2 interrupts: enabled after 2nd sample but not promoted to controller
-void ADC_Init89(void);
+// SS0 triggering event: hardware trigger, hardware interrupt when conversion finished sampling
+// SS0 1st sample source: PE0
+// SS0 2nd sample source: PE1
+// ...
+// SS0 7th sample source: PD2
+// SS0 8th sample source: PD3
+void ADC0_Init(void);
 
-//------------ADC_In89------------
-// Busy-wait Analog to digital conversion
+// Initializes ADC1 sampling
+// 125k max sampling
+// SS0 triggering event: hardware trigger, hardware interrupt when conversion finished sampling
+// SS0 1st sample source: PE0
+// SS0 2nd sample source: PE1
+// ...
+// SS0 7th sample source: PD2
+// SS0 8th sample source: PD3
+void ADC1_Init(void);
+
+//------------ADC0Seq0_Handler------------
+// Analog to digital conversion ready
 // Input: none
-// Output: two 12-bit result of ADC conversions
-// Samples ADC8 and ADC9 
+// Output: eight 12-bit result of ADC conversions
+// Samples Sequencer 0 on ADC0
 // 125k max sampling
-// software trigger, busy-wait sampling
-// data returned by reference
-// data[0] is ADC8 (PE5) 0 to 4095
-// data[1] is ADC9 (PE4) 0 to 4095
-void ADC_In89(uint32_t data[4]);
+// data returned by reference to global
+void ADC0Seq0_Handler(void);
 
-void ADC_In10(uint32_t data[2]);
+//------------ADC1Seq0_Handler------------
+// Analog to digital conversion ready
+// Input: none
+// Output: eight 12-bit result of ADC conversions
+// Samples Sequencer 0 on ADC1
+// 125k max sampling
+// data returned by reference to global
+void ADC1Seq0_Handler(void);

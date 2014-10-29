@@ -74,16 +74,8 @@ void Timer3A_Init( uint32_t period);
 
 void Timer2B_Init(uint32_t period);
 
-void Timer0A_Enable(void);
-
-void Timer0A_Disable(void);
-
 void Timer1A_Enable(void);
 
 void Timer1A_Disable(void);
-
-void Timer2A_Enable(void);
-
-void Timer2A_Disable(void);
 
 #endif // __TIMER_H__

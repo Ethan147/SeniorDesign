@@ -27,6 +27,8 @@
 #include "inc/tm4c123gh6pm.h"
 #include "ADC.h"
 
+extern uint32_t data[8];
+
 // There are many choices to make when using the ADC, and many
 // different combinations of settings will all do basically the
 // same thing.  For simplicity, this function makes some choices
@@ -49,108 +51,147 @@
 // software can transfer the conversion result to memory and
 // process it after all measurements are complete.
 
-// Initializes ADC8 and ADC9 sampling
+// Initializes ADC0 sampling
 // 125k max sampling
-// SS2 triggering event: software trigger, busy-wait sampling
-// SS2 1st sample source: Ain9 (PE4)
-// SS2 2nd sample source: Ain8 (PE5)
-// SS2 interrupts: enabled after 2nd sample but not promoted to controller
-void ADC_Init89(void){ 
+// SS0 triggering event: hardware trigger, hardware interrupt when conversion finished sampling
+// SS0 1st sample source: PE0
+// SS0 2nd sample source: PE1
+// ...
+// SS0 7th sample source: PD2
+// SS0 8th sample source: PD3
+void ADC0_Init(void){ 
   volatile uint32_t delay;                         
-//  SYSCTL_RCGC0_R |= 0x00010000; // 1) activate ADC0 (legacy code)
-  SYSCTL_RCGCADC_R |= 0x00000003; // 1) activate ADC0 and ADC1
-  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4; // 1) activate clock for Port E
-  delay = SYSCTL_RCGCGPIO_R;      // 2) allow time for clock to stabilize
+  SYSCTL_RCGCADC_R |= 0x00000001; 					// 1) activate ADC0.
+//	SYSCTL_RCGCADC_R |= 0x00000002; 					// 1) activate ADC1. Currently not used.
+  
+// Initialization of Port E and Port D for analog input.
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4; 	// 1) activate clock for Port E
+  delay = SYSCTL_RCGCGPIO_R;      					// 2) allow time for clock to stabilize
   delay = SYSCTL_RCGCGPIO_R;
-  GPIO_PORTE_DIR_R &= ~0x3C;      // 3) make PE4 PE5 input
-  GPIO_PORTE_AFSEL_R |= 0x3C;     // 4) enable alternate function on PE0 - PE5
-  GPIO_PORTE_DEN_R &= ~0x3C;      // 5) disable digital I/O on PE0 - PE5
-                                  // 5a) configure PE4 as ?? (skip this line because PCTL is for digital only)
-  GPIO_PORTE_PCTL_R = GPIO_PORTE_PCTL_R&0xFF0000FF;
-  GPIO_PORTE_AMSEL_R |= 0x3C;     // 6) enable analog functionality on PE0 - PE5
-	
-  ADC0_PC_R &= ~0xF;              // 8) clear max sample rate field
-  ADC0_PC_R |= 0x1;               //    configure for 125K samples/sec
-  ADC0_SSPRI_R = 0x3210;          // 9) Sequencer 3 is lowest priority
-  ADC0_ACTSS_R &= ~0x0001;        // 10) disable sample sequencer 0
-  ADC0_EMUX_R &= ~0x000F;         // 11) seq0 is software trigger
-  ADC0_SSMUX0_R = 0x23; 	        // 12) set channels for SS0
-  ADC0_SSCTL0_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
-  ADC0_IM_R &= ~0x0001;           // 14) disable SS0 interrupts
-  ADC0_ACTSS_R |= 0x0001;         // 15) enable sample sequencer 0
-	
-  ADC0_ACTSS_R &= ~0x0002;        // 10) disable sample sequencer 1
-  ADC0_EMUX_R &= ~0x00F0;         // 11) seq1 is software trigger
-	ADC0_SSMUX1_R = 0x01;		        // 12) set channels for SS1
-  ADC0_SSCTL1_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
-  ADC0_IM_R &= ~0x0002;           // 14) disable SS1 interrupts
-  ADC0_ACTSS_R |= 0x0002;         // 15) enable sample sequencer 1
-	
-  ADC1_PC_R &= ~0xF;              // 8) clear max sample rate field
-  ADC1_PC_R |= 0x1;               //    configure for 125K samples/sec
-  ADC1_SSPRI_R = 0x3210;          // 9) Sequencer 3 is lowest priority
-  ADC1_ACTSS_R &= ~0x0001;        // 10) disable sample sequencer 2
-  ADC1_EMUX_R &= ~0x000F;         // 11) seq2 is software trigger
-  ADC1_SSMUX0_R = 0x89;         // 12) set channels for SS2
-  ADC1_SSCTL0_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
-  ADC1_IM_R &= ~0x0001;           // 14) disable SS2 interrupts
-  ADC1_ACTSS_R |= 0x0001;         // 15) enable sample sequencer 2
+  GPIO_PORTE_DIR_R &= ~0x3F;      					// 3) make PE0 - PE5 input
+  GPIO_PORTE_AFSEL_R |= 0x3F;     					// 4) enable alternate function on PE0 - PE5
+  GPIO_PORTE_DEN_R &= ~0x3F;      					// 5) disable digital I/O on PE0 - PE5
+																						// 5a) configure PE4 as ?? (skip this line because PCTL is for digital only)
+  GPIO_PORTE_PCTL_R &= 0xFF000000;
+  GPIO_PORTE_AMSEL_R |= 0x3F;     					// 6) enable analog functionality on PE0 - PE5
 
-  ADC1_PC_R &= ~0xF;              // 8) clear max sample rate field
-  ADC1_PC_R |= 0x1;               //    configure for 125K samples/sec
-  ADC1_SSPRI_R = 0x3210;          // 9) Sequencer 3 is lowest priority
-  ADC1_ACTSS_R &= ~0x0002;        // 10) disable sample sequencer 2
-  ADC1_EMUX_R &= ~0x00F0;         // 11) seq2 is software trigger
-  ADC1_SSMUX1_R = 0x45;         // 12) set channels for SS2
-  ADC1_SSCTL1_R = 0x0060;         // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
-  ADC1_IM_R &= ~0x0002;           // 14) disable SS2 interrupts
-  ADC1_ACTSS_R |= 0x0002;         // 15) enable sample sequencer 2
+  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3; 	// 1) activate clock for Port D
+  delay = SYSCTL_RCGCGPIO_R;      					// 2) allow time for clock to stabilize
+  delay = SYSCTL_RCGCGPIO_R;
+  GPIO_PORTD_DIR_R &= ~0x0C;      					// 3) make PD2 PD3 input
+  GPIO_PORTD_AFSEL_R |= 0x0C;     					// 4) enable alternate function on PD2 PD3
+  GPIO_PORTD_DEN_R &= ~0x0C;      					// 5) disable digital I/O on PD2 PD3
+																						// 5a) configure PD2 PD3 as ?? (skip this line because PCTL is for digital only)
+  GPIO_PORTD_PCTL_R &= 0xFFFF00FF;
+  GPIO_PORTD_AMSEL_R |= 0x0C;     					// 6) enable analog functionality on PD2 PD3
+	
+/***** NOTE: Timer initializations are localized in timer.c *****/
+
+//  SYSCTL_RCGCTIMER_R |= 0x02;      								// 0) activate timer1
+//	delay = SYSCTL_RCGCTIMER_R;   									// allow time to finish activating
+//  TIMER1_CTL_R &= ~0x00000001;    								// 1) disable timer1A during setup
+//	TIMER1_CTL_R |= 0x00000020;   	 								// enable timer1A trigger to ADC
+//  TIMER1_CFG_R = 0x00000000;       								// 2) configure for 32-bit timer mode
+//  TIMER1_TAMR_R = 0x00000002;      								// 3) configure for periodic mode, default down-count settings
+//  TIMER1_TAPR_R = 0;               								// 5) ??? I am not sure what this line does. 12.5ns timer1A
+//  TIMER1_TAILR_R = period-1;       								// 4) reload value
+//	TIMER1_IMR_R &= ~0x00000001;    								// 7) arm timeout interrupt
+//	TIMER1_CTL_R |= 0x00000001;							      	// 8) enable timer1A
+//	NVIC_PRI5_R = (NVIC_PRI5_R&0xFFFF00FF)|0x00008000; // 9) Consult NVIC table to adjust this line.
+//	NVIC_EN0_R = NVIC_EN0_INT14;     								// 10) enable interrupt 14 (Seq0) in NVIC
+
+/***** NOTE: Timer initializations are localized in timer.c *****/
+	
+	ADC0_PC_R = 0x01;            							// 2) configure for 125K samples/sec
+  ADC0_SSPRI_R = 0x3210;        						// 3) sequencer 0 is highest, sequencer 3 is lowest  
+  ADC0_ACTSS_R &= ~0x01;        									// 5) disable sample sequencer 0
+  ADC0_EMUX_R = (ADC0_EMUX_R&0xFFFFFFF0)+0x0005; 	// timer trigger event for sequencer 0
+  ADC0_SSMUX0_R = 0x45890123; 	        					// 12) set channels for SS0
+  ADC0_SSCTL0_R = 0x60000000;         						// 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1               
+  ADC0_IM_R |= 0x01;            									// 9) enable SS0 interrupts
+  ADC0_ACTSS_R |= 0x01;         									// 10) enable sample sequencer 0	
 }
 
-//------------ADC_In89------------
-// Busy-wait Analog to digital conversion
-// Input: none
-// Output: two 12-bit result of ADC conversions
-// Samples ADC8 and ADC9 
+// Initializes ADC1 sampling
 // 125k max sampling
-// software trigger, busy-wait sampling
-// data returned by reference
-// data[0] is ADC8 (PE5) 0 to 4095
-// data[1] is ADC9 (PE4) 0 to 4095
-void ADC_In89(uint32_t data[4]){ 
-  ADC0_PSSI_R = 0x0001;            // 1) initiate SS2
-  while((ADC0_RIS_R&0x01)==0){};   // 2) wait for conversion done
-  data[0] = ADC0_SSFIFO0_R&0xFFF;  // 3A) read first result
-  data[1] = ADC0_SSFIFO0_R&0xFFF;  // 3B) read second result
-  ADC0_ISC_R = 0x0001;             // 4) acknowledge completion	
+// SS0 triggering event: hardware trigger, hardware interrupt when conversion finished sampling
+// SS0 1st sample source: PE0
+// SS0 2nd sample source: PE1
+// ...
+// SS0 7th sample source: PD2
+// SS0 8th sample source: PD3
+void ADC1_Init(void){ 
+  volatile uint32_t delay;                         
+	SYSCTL_RCGCADC_R |= 0x00000002; 					// 1) activate ADC1. Currently not used.
 	
-  ADC0_PSSI_R = 0x0002;            // 1) initiate SS2
-  while((ADC0_RIS_R&0x02)==0){};   // 2) wait for conversion done
-  data[2] = ADC0_SSFIFO1_R&0xFFF;  // 3A) read first result
-  data[3] = ADC0_SSFIFO1_R&0xFFF;  // 3B) read second result
-  ADC0_ISC_R = 0x0002;             // 4) acknowledge completion
+/***** NOTE: Timer initializations are localized in timer.c *****/
+
+//  SYSCTL_RCGCTIMER_R |= 0x04;      								// 0) activate timer2
+//	delay = SYSCTL_RCGCTIMER_R;   									// allow time to finish activating
+//  TIMER2_CTL_R &= ~0x00000001;    								// 1) disable timer1A during setup
+//	TIMER2_CTL_R |= 0x00000020;   	 								// enable timer1A trigger to ADC
+//  TIMER2_CFG_R = 0x00000000;       								// 2) configure for 32-bit timer mode
+//  TIMER2_TAMR_R = 0x00000002;      								// 3) configure for periodic mode, default down-count settings
+//  TIMER2_TAPR_R = 0;               								// 5) ??? I am not sure what this line does. 12.5ns timer1A
+//  TIMER2_TAILR_R = period-1;       								// 4) reload value
+//	TIMER2_IMR_R &= ~0x00000001;    								// 7) arm timeout interrupt
+//	TIMER2_CTL_R |= 0x00000001;							      	// 8) enable timer1A
+//	NVIC_PRI5_R = (NVIC_PRI5_R&0xFFFF00FF)|0x00008000; // 9) Consult NVIC table to adjust this line.
+//	NVIC_EN0_R = NVIC_EN0_INT14;     								// 10) enable interrupt 14 (Seq0) in NVIC
+
+/***** NOTE: Timer initializations are localized in timer.c *****/
+	
+	ADC1_ACTSS_R &= ~0x01;        									// 5) disable sample sequencer 0
+  ADC1_EMUX_R = (ADC1_EMUX_R&0xFFFFFFF0)+0x0005; 	// timer trigger event for sequencer 0
+  ADC1_SSMUX0_R = 0x45890123; 	        					// 12) set channels for SS0
+  ADC1_SSCTL0_R = 0x60000000;         						// 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1               
+  ADC1_IM_R |= 0x01;           	 									// 9) enable SS0 interrupts
+  ADC1_ACTSS_R |= 0x01;         									// 10) enable sample sequencer 0
 }
 
-//------------ADC_In10------------
-// Busy-wait Analog to digital conversion
+//------------ADC0Seq0_Handler------------
+// Analog to digital conversion ready
 // Input: none
-// Output: two 12-bit result of ADC conversions
-// Samples ADC8 and ADC9 
+// Output: eight 12-bit result of ADC conversions
+// Samples Sequencer 0 on ADC0
 // 125k max sampling
-// software trigger, busy-wait sampling
-// data returned by reference
-// data[0] is ADC8 (PE5) 0 to 4095
-// data[1] is ADC9 (PE4) 0 to 4095
-void ADC_In10(uint32_t data[2]){ 
-  ADC1_PSSI_R = 0x0001;            // 1) initiate SS2
-  while((ADC1_RIS_R&0x01)==0){};   // 2) wait for conversion done
-  data[0] = ADC1_SSFIFO0_R&0xFFF;  // 3A) read first result
-  data[1] = ADC1_SSFIFO0_R&0xFFF;  // 3B) read second result
-  ADC1_ISC_R = 0x0001;             // 4) acknowledge completion	
+// data returned by reference to global
+void ADC0Seq0_Handler(void){
 	
-  ADC1_PSSI_R = 0x0002;            // 1) initiate SS2
-  while((ADC1_RIS_R&0x02)==0){};   // 2) wait for conversion done
-  data[2] = ADC1_SSFIFO1_R&0xFFF;  // 3A) read first result
-  data[3] = ADC1_SSFIFO1_R&0xFFF;  // 3B) read second result
-  ADC1_ISC_R = 0x0002;             // 4) acknowledge completion
+  data[0] = ADC0_SSFIFO0_R&0xFFF;  // PE0) read first result
+  data[1] = ADC0_SSFIFO0_R&0xFFF;  // PE1) read second result
+  data[2] = ADC0_SSFIFO0_R&0xFFF;  // PE2) read third result
+  data[3] = ADC0_SSFIFO0_R&0xFFF;  // PE3) read fourth result
+  data[4] = ADC0_SSFIFO0_R&0xFFF;  // PE4) read fifth result
+  data[5] = ADC0_SSFIFO0_R&0xFFF;  // PE5) read sixth result
+  data[6] = ADC0_SSFIFO0_R&0xFFF;  // PD2) read seventh result
+  data[7] = ADC0_SSFIFO0_R&0xFFF;  // PD3) read eighth result	
+  ADC0_ISC_R = 0x01;          		 // Last) acknowledge ADC sequence 0 completion
+	
 }
+
+// NOTE: ADC1 is not currently assigned a timer.
+//			 This handler is dead code, but can be initialized
+//			 to expand ADC input.
+
+//------------ADC1Seq0_Handler------------
+// Analog to digital conversion ready
+// Input: none
+// Output: eight 12-bit result of ADC conversions
+// Samples Sequencer 0 on ADC1
+// 125k max sampling
+// data returned by reference to global
+void ADC1Seq0_Handler(void)
+{ 
+
+  data[0] = ADC1_SSFIFO0_R&0xFFF;  // PE0) read first result
+  data[1] = ADC1_SSFIFO0_R&0xFFF;  // PE1) read second result
+  data[2] = ADC1_SSFIFO0_R&0xFFF;  // PE2) read third result
+  data[3] = ADC1_SSFIFO0_R&0xFFF;  // PE3) read fourth result
+  data[4] = ADC1_SSFIFO0_R&0xFFF;  // PE4) read fifth result
+  data[5] = ADC1_SSFIFO0_R&0xFFF;  // PE5) read sixth result
+  data[6] = ADC1_SSFIFO0_R&0xFFF;  // PD2) read seventh result
+  data[7] = ADC1_SSFIFO0_R&0xFFF;  // PD3) read eighth result
+  ADC1_ISC_R = 0x0001;             // Last) acknowledge ADC sequence 0 completion	
+}
+
