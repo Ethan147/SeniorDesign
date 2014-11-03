@@ -450,6 +450,16 @@
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
             </File>
+            <File>
+              <FileName>MPPTmain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\MPPTmain.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpptfunctions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\mpptfunctions.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

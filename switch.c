@@ -75,6 +75,10 @@ void WaitForInterrupt(void);  // low power mode
 
 /* Externs */
 
+extern uint8_t continueFlag;
+extern uint8_t printFlag;
+extern uint32_t motorConstant;
+
 /* Implementation */
 
 void Switch_Init(void){  
@@ -83,18 +87,18 @@ void Switch_Init(void){
   SYSCTL_RCGC2_R |= 0x00000020; 		// (a) activate clock for port F
   delay = SYSCTL_RCGC2_R;           // allow time for clock to start
 	GPIO_PORTF_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port F
-	GPIO_PORTF_CR_R = 0x1E;           // allow changes to PF4 - PF1
-	GPIO_PORTF_DIR_R &= ~0x1E;    		// (c) make PF4 - PF1 input
-  GPIO_PORTF_AFSEL_R &= ~0x1E;  		//     disable alt funct on PF4 - PF1
-  GPIO_PORTF_DEN_R |= 0x1E;     		//     enable digital I/O on PF4 - PF1 
-	GPIO_PORTF_PCTL_R = 0x0000FFF0; 	// configure PF4 - PF1 as GPIO 
+	GPIO_PORTF_CR_R = 0x1F;           // allow changes to PF4 - PF1
+	GPIO_PORTF_DIR_R &= ~0x1F;    		// (c) make PF4 - PF1 input
+  GPIO_PORTF_AFSEL_R &= ~0x1F;  		//     disable alt funct on PF4 - PF1
+  GPIO_PORTF_DEN_R |= 0x1F;     		//     enable digital I/O on PF4 - PF1 
+	GPIO_PORTF_PCTL_R = 0x0000FFFF; 	// configure PF4 - PF1 as GPIO 
 	GPIO_PORTF_AMSEL_R = 0;       		//     disable analog functionality on PF
 	GPIO_PORTF_AMSEL_R &= ~(0x00);
-  GPIO_PORTF_IS_R &= ~0x1E;     		// (d) PF3-1 is edge-sensitive
-  GPIO_PORTF_IBE_R &= ~0x1E;    		//     PF3-1 is not both edges
-  GPIO_PORTF_IEV_R |= 0x1E;    			//     PF4 rising edge event
-  GPIO_PORTF_ICR_R = 0x1E;      		// (e) clear flags
-  GPIO_PORTF_IM_R |= 0x1E;      		// (f) arm interrupt on PF4 - PF1
+  GPIO_PORTF_IS_R &= ~0x1F;     		// (d) PF3-1 is edge-sensitive
+  GPIO_PORTF_IBE_R &= ~0x1F;    		//     PF3-1 is not both edges
+  GPIO_PORTF_IEV_R |= 0x1F;    			//     PF4 rising edge event
+  GPIO_PORTF_ICR_R = 0x1F;      		// (e) clear flags
+  GPIO_PORTF_IM_R |= 0x1F;      		// (f) arm interrupt on PF4 - PF0
 	
   NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|0x00A00000; // (g) priority 5
   NVIC_EN0_R = 0x40000000;      // (h) enable interrupt 30 in NVIC
@@ -104,45 +108,56 @@ void Switch_Init(void){
 void GPIOPortF_Handler(void)
 {
 	int32_t sr;
-	
-		if(0x02)	//PF1
+
+		if( GPIO_PORTF_DATA_R & 0x01)	//PF0
 		{
 			//Switch 1 Handler
 			GPIO_PORTF_ICR_R |= 0x01;      // acknowledge flag
 			sr = StartCritical();
-			GPIO_PORTF_DATA_R = 0x00;
-			GPIO_PORTF_IM_R &= ~0x1E;
+
 			Timer1A_Enable();
 			EndCritical(sr);
-		}
-		if(0x04)	//PF2
+		}	
+		if( GPIO_PORTF_DATA_R & 0x02)	//PF1
 		{
-			//Switch 2 Handler
+			//Switch 1 Handler
 			GPIO_PORTF_ICR_R |= 0x02;      // acknowledge flag
 			sr = StartCritical();
-			GPIO_PORTF_DATA_R = 0x00;
-			GPIO_PORTF_IM_R &= ~0x1E;
+
 			Timer1A_Enable();
 			EndCritical(sr);
 		}
-		if(0x08)	//PF3	
+		if( GPIO_PORTF_DATA_R & 0x04)	//PF2
+		{
+			//Switch 2 Handler
+			GPIO_PORTF_ICR_R |= 0x04;      // acknowledge flag
+			sr = StartCritical();
+
+			Timer1A_Enable();
+			if(motorConstant > 0)
+				motorConstant -= 1;
+			printFlag = 1;
+			EndCritical(sr);
+		}
+		if( GPIO_PORTF_DATA_R & 0x08)	//PF3	
 		{
 			//Switch 3 Handler
 			GPIO_PORTF_ICR_R |= 0x08;      // acknowledge flag
 			sr = StartCritical();
-			GPIO_PORTF_DATA_R = 0x00;
-			GPIO_PORTF_IM_R &= ~0x1E;
+
 			Timer1A_Enable();
+			motorConstant += 1;
+			printFlag = 1;
 			EndCritical(sr);
 		}
-		if(0x10)	//PF4	
+		if( GPIO_PORTF_DATA_R & 0x10)	//PF4	
 		{
 			//Switch 4 Handler
 			GPIO_PORTF_ICR_R |= 0x10;      // acknowledge flag
 			sr = StartCritical();
-			GPIO_PORTF_DATA_R = 0x00;
-			GPIO_PORTF_IM_R &= ~0x1E;
+			
 			Timer1A_Enable();
+			continueFlag = 1;
 			EndCritical(sr);
 		}		
 }

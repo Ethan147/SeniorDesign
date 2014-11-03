@@ -58,6 +58,8 @@ void PWM0_0A_Duty(uint16_t duty);
 void PWM0_0B_Duty(uint16_t duty);
 
 void PWM0_1A_Duty(uint16_t duty);
+void PWM0_1B_Duty(uint16_t duty);
+
 
 void PWM0_3_Init(void);
 

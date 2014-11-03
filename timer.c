@@ -243,11 +243,13 @@ void Timer0A_Handler(void)
 
 	sineOutput = FloatMultiply(sineTable[phaseOne], 39800.0);
 	castFloat = sineOutput;
-	PWM0_0A_Duty( castFloat);
+	//PWM0_0A_Duty( castFloat);
+	PWM0_1B_Duty( castFloat);
 	
 	sineOutput = FloatMultiply(sineTable[phaseTwo], 39800.0);
 	castFloat = sineOutput;
-	PWM0_0B_Duty( castFloat);
+	//PWM0_0B_Duty( castFloat);
+	PWM0_3A_Duty(castFloat);
 	
 	sineOutput = FloatMultiply(sineTable[phaseThree], 39800.0);
 	castFloat = sineOutput;

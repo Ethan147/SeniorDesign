@@ -89,11 +89,11 @@ void PWM0_1_Init(void){
   SYSCTL_RCGCPWM_R |= SYSCTL_RCGCPWM_PWM0;  		// 1) activate PWM0
   SYSCTL_RCGCGPIO_R |= 0x02;            				// 2) activate port B
   while((SYSCTL_PRGPIO_R&0x02) == 0){};
-  GPIO_PORTB_AFSEL_R |= 0x10;           				// enable alt funct on PB4
-  GPIO_PORTB_PCTL_R &= ~0x000F0000;     				// configure PB4 as PWM0
-  GPIO_PORTB_PCTL_R |= 0x00040000;
-  GPIO_PORTB_AMSEL_R &= ~0x10;          				// disable analog functionality on PB4
-  GPIO_PORTB_DEN_R |= 0x10;             				// enable digital I/O on PB4
+  GPIO_PORTB_AFSEL_R |= 0x30;           				// enable alt funct on PB4
+  GPIO_PORTB_PCTL_R &= ~0x00FF0000;     				// configure PB4 as PWM0
+  GPIO_PORTB_PCTL_R |= 0x00440000;
+  GPIO_PORTB_AMSEL_R &= ~0x30;          				// disable analog functionality on PB4
+  GPIO_PORTB_DEN_R |= 0x30;             				// enable digital I/O on PB4
   SYSCTL_RCC_R = SYSCTL_RCC_USEPWMDIV | 				// 3) use PWM divider
       (SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M));   
 	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_M;						//  configure for no divider
@@ -162,6 +162,12 @@ void PWM0_0B_Duty(uint16_t duty){
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0_1A_Duty(uint16_t duty){
   PWM0_1_CMPA_R = duty - 1;             // 6) count value when output rises
+}
+
+// change duty cycle of PB5
+// duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
+void PWM0_1B_Duty(uint16_t duty){
+  PWM0_1_CMPB_R = duty - 1;             // 6) count value when output rises
 }
 
 // change duty cycle of PC4

@@ -47,6 +47,7 @@ void WaitForInterrupt(void);  // low power mode
 
 void DelayWait10ms(uint32_t n);
 void PrintSplash(void);
+void GrabCalibration(void);
 
 /********************** Constants **********************/
 
@@ -70,7 +71,7 @@ int main(void)
 	PLL_Init();		
 	Switch_Init();	
 	
-	PWM0_0_Init();
+	//PWM0_0_Init();
 	PWM0_1_Init();
 	PWM0_3_Init();					// This PWM fires at double the frequency of the others.
 	
@@ -86,6 +87,7 @@ int main(void)
 // Last: Init Screen Output
 	Output_Init();
 	PrintSplash();
+	GrabCalibration();
 	
 	// Activate Interrupts
 	EnableInterrupts(); 
@@ -108,7 +110,7 @@ uint8_t flag = 0;
 			
 			if( !flag )
 			{
-				sprintf(number, "ADC0 PE0: %05d", data[0]);
+				sprintf(number, "ADC0 PE0: %03d%% Voltage", (data[0] * 100) / 4095);
 				ST7735_SetCursor(0, 0);
 				printf("%s", number);
 				
@@ -145,6 +147,7 @@ uint8_t flag = 0;
 
 			else
 			{	
+				/*
 				sprintf(number, "ADC1 PE0: %05d", data[0]);
 				ST7735_SetCursor(0, 0);
 				printf("%s", number);
@@ -176,7 +179,7 @@ uint8_t flag = 0;
 				sprintf(number, "ADC1 PD3: %05d", data[7]);
 				ST7735_SetCursor(0, 7);
 				printf("%s", number);
-				
+				*/
 				flag = 0;
 			}
 		}			
@@ -243,6 +246,39 @@ void PrintSplash(void)
 			}
 		}
 	}	
+}
+
+uint8_t continueFlag = 0;
+uint8_t printFlag = 0;
+uint32_t motorConstant = 0;
+
+void GrabCalibration(void)
+{
+	Output_Clear();
+	ST7735_SetCursor(0, 3);
+	printf("%s", "Please input a motor");
+	ST7735_SetCursor(5, 4);
+	printf("%s", "calibration");
+	ST7735_SetCursor(6, 5);
+	printf("%s", "constant:");
+	
+	ST7735_SetCursor(8, 8);
+	printf("%04d", motorConstant);
+	
+	while ( ! continueFlag )
+	{
+		// Wait for continue flag from user
+		if(printFlag)
+		{
+			// Update the number on the screen
+			ST7735_SetCursor(8, 8);
+			printf("%04d", motorConstant);
+			printFlag = 0;
+		}
+	}
+	
+	GPIO_PORTF_IM_R &= ~(0x1F);      		// (f) disarm interrupt on PF4 - PF0
+	
 }
 
 // Subroutine to wait 10 msec

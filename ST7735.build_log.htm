@@ -3,7 +3,95 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\Alexander\Documents\Sr_Design2\ST7735_4C123\Sr_Design.uvproj
-Project File Date:  10/23/2014
+C:\Users\Colin\Documents\sr_design\Sr_Design.uvproj
+Project File Date:  11/03/2014
 
 <h2>Output:</h2>
+Build target 'Sr_Design'
+compiling switch.c...
+compiling main.c...
+linking...
+Program Size: Code=7968 RO-data=14980 RW-data=108 ZI-data=1060  
+".\ST7735.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Colin\\Documents\\sr_design\\ST7735.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+</pre>
+</body>
+</html>
+Load "C:\\Users\\Colin\\Documents\\sr_design\\ST7735.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+OK.
+ identifier "OCR1A" is undefined
+       unsigned int temp = OCR1A + d ;
+mpptfunctions.c(68): error:  #20: identifier "PWM_TOP_VALUE" is undefined
+       if ( temp > PWM_TOP_VALUE )
+mpptfunctions.c(78): error:  #20: identifier "TCNT0" is undefined
+       TCNT0 = 0;
+mpptfunctions.c(80): error:  #20: identifier "TCCR0A" is undefined
+       TCCR0A |= (1 << WGM01 ) ;
+mpptfunctions.c(80): error:  #20: identifier "WGM01" is undefined
+       TCCR0A |= (1 << WGM01 ) ;
+mpptfunctions.c(82): error:  #20: identifier "TCCR0B" is undefined
+       TCCR0B |= (1 << CS02 ) | (0 << CS01 ) | (1 << CS00 ) ;
+mpptfunctions.c(82): error:  #20: identifier "CS02" is undefined
+       TCCR0B |= (1 << CS02 ) | (0 << CS01 ) | (1 << CS00 ) ;
+mpptfunctions.c(82): error:  #20: identifier "CS01" is undefined
+       TCCR0B |= (1 << CS02 ) | (0 << CS01 ) | (1 << CS00 ) ;
+mpptfunctions.c(82): error:  #20: identifier "CS00" is undefined
+       TCCR0B |= (1 << CS02 ) | (0 << CS01 ) | (1 << CS00 ) ;
+mpptfunctions.c(84): error:  #20: identifier "OCR0A" is undefined
+       OCR0A = TIMER_TOP_VALUE ;
+mpptfunctions.c(84): error:  #20: identifier "TIMER_TOP_VALUE" is undefined
+       OCR0A = TIMER_TOP_VALUE ;
+mpptfunctions.c(86): error:  #20: identifier "TIMSK0" is undefined
+       TIMSK0 = (1 << OCIE0A ) ;
+mpptfunctions.c(86): error:  #20: identifier "OCIE0A" is undefined
+       TIMSK0 = (1 << OCIE0A ) ;
+mpptfunctions.c(93): error:  #20: identifier "DDRC" is undefined
+       DDRC &= ~((1 << PC5 ) | (1 << PC4 ) ) ;
+mpptfunctions.c(93): error:  #20: identifier "PC5" is undefined
+       DDRC &= ~((1 << PC5 ) | (1 << PC4 ) ) ;
+mpptfunctions.c(93): error:  #20: identifier "PC4" is undefined
+       DDRC &= ~((1 << PC5 ) | (1 << PC4 ) ) ;
+mpptfunctions.c(95): error:  #20: identifier "ADCSRA" is undefined
+        ADCSRA |= (1 << ADPS2 ) | (1 << ADPS1 ) ;
+mpptfunctions.c(95): error:  #20: identifier "ADPS2" is undefined
+        ADCSRA |= (1 << ADPS2 ) | (1 << ADPS1 ) ;
+mpptfunctions.c(95): error:  #20: identifier "ADPS1" is undefined
+        ADCSRA |= (1 << ADPS2 ) | (1 << ADPS1 ) ;
+mpptfunctions.c(97): error:  #20: identifier "ADMUX" is undefined
+       ADMUX |= (1 << REFS0 ) ;
+mpptfunctions.c(97): error:  #20: identifier "REFS0" is undefined
+       ADMUX |= (1 << REFS0 ) ;
+mpptfunctions.c(99): error:  #20: identifier "ADLAR" is undefined
+       ADMUX &= ~(1 << ADLAR ) ;
+mpptfunctions.c(101): error:  #20: identifier "ADATE" is undefined
+       ADMUX |= (1 << ADATE ) ;
+mpptfunctions.c(103): error:  #20: identifier "MUX3" is undefined
+       ADMUX &= ~(1 << MUX3 ) | (1 << MUX1 ) ;
+mpptfunctions.c(103): error:  #20: identifier "MUX1" is undefined
+       ADMUX &= ~(1 << MUX3 ) | (1 << MUX1 ) ;
+mpptfunctions.c(104): error:  #20: identifier "MUX2" is undefined
+       ADMUX |= (1 << MUX2 ) | (1 << MUX0 ) ;
+mpptfunctions.c(104): error:  #20: identifier "MUX0" is undefined
+       ADMUX |= (1 << MUX2 ) | (1 << MUX0 ) ;
+mpptfunctions.c: 1 warning, 30 errors
+".\ST7735.axf" - 30 Error(s), 1 Warning(s).
+Target not created
+UX3" is undefined
+       ADMUX &= ~(1 << MUX3 ) | (1 << MUX1 ) ;
+mpptfunctions.c(103): error:  #20: identifier "MUX1" is undefined
+       ADMUX &= ~(1 << MUX3 ) | (1 << MUX1 ) ;
+mpptfunctions.c(104): error:  #20: identifier "MUX2" is undefined
+       ADMUX |= (1 << MUX2 ) | (1 << MUX0 ) ;
+mpptfunctions.c(104): error:  #20: identifier "MUX0" is undefined
+       ADMUX |= (1 << MUX2 ) | (1 << MUX0 ) ;
+mpptfunctions.c: 5 warnings, 30 errors
+".\ST7735.axf" - 30 Error(s), 5 Warning(s).
+Target not created
