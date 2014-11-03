@@ -173,5 +173,5 @@ void PWM0_1B_Duty(uint16_t duty){
 // change duty cycle of PC4
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0_3A_Duty(uint16_t duty){
-  PWM0_3_CMPA_R = duty - 1;             // 6) count value when output rises
+  SPWM0_3_CMPA_R = duty - 1;             // 6) count value when output rises
 }

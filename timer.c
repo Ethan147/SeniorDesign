@@ -49,7 +49,8 @@
                                             // Register Low
 #define MAX_CHECKS 3	// # checks before a switch is debounced
 
-	
+#define MAX_AMPLITUDE 39800.0
+
 /* Sine Data LookUp Table */
 //static const uint16_t sineTableOrig[256]={2884,2954,3025,3095,3165,3235,3305,3375,3444,3512,
 //                                3581,3648,3715,3782,3848,3914,3978,4042,4105,4168,
@@ -229,6 +230,10 @@ void Timer2B_Init(uint32_t period)
 void Timer0A_Handler(void)
 {
 	int32_t sr;
+	
+	static uint32_t cycleCount = 0;
+	float amplitude = MAX_AMPLITUDE; // We should manipulate this based on input voltage characteristics
+	
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
 	sr = StartCritical();
 	
@@ -240,18 +245,16 @@ void Timer0A_Handler(void)
 	
 	phaseThree += 1;
 	phaseThree &= 0x0FF;
-
-	sineOutput = FloatMultiply(sineTable[phaseOne], 39800.0);
+	
+	sineOutput = FloatMultiply(sineTable[phaseOne], amplitude);
 	castFloat = sineOutput;
-	//PWM0_0A_Duty( castFloat);
 	PWM0_1B_Duty( castFloat);
 	
-	sineOutput = FloatMultiply(sineTable[phaseTwo], 39800.0);
+	sineOutput = FloatMultiply(sineTable[phaseTwo], amplitude);
 	castFloat = sineOutput;
-	//PWM0_0B_Duty( castFloat);
 	PWM0_3A_Duty(castFloat);
 	
-	sineOutput = FloatMultiply(sineTable[phaseThree], 39800.0);
+	sineOutput = FloatMultiply(sineTable[phaseThree], amplitude);
 	castFloat = sineOutput;
 	PWM0_1A_Duty( castFloat);
 

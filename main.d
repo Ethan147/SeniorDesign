@@ -8,3 +8,4 @@
 .\main.o: switch.h
 .\main.o: PWM.h
 .\main.o: ADC.h
+.\main.o: mpptfunctions.h

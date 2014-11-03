@@ -36,6 +36,7 @@
 #include "switch.h"
 #include "PWM.h"
 #include "ADC.h"
+#include "mpptfunctions.h"
 
 /********************** Prototypes *********************/
 
@@ -53,12 +54,22 @@ void GrabCalibration(void);
 
 #define SYSCTL_RCGC2_GPIOF      0x00000020  // port F Clock Gating Control
 #define INTPERIOD              	80000000    // interrupt period (80MHz cycles)
+#define SIXTYHZPERIOD              	5208    // interrupt period (80MHz cycles)
 
 /********************** Externs ************************/
+
+extern uint8_t index;
 
 /********************** Globals ************************/
 
 uint32_t data[8];
+
+uint8_t callMPPT = 0;
+
+uint32_t V;
+uint32_t I;
+int32_t dV;
+int32_t dI;
 
 /******************* Implementation ********************/
 
@@ -79,110 +90,77 @@ int main(void)
 	
 // Software	
 	// Timer Interrupts
-	Timer0A_Init(INTPERIOD>>6);		// time here. PWM shifting.
+	Timer0A_Init(SIXTYHZPERIOD);		// time here. PWM shifting.
 	Timer1A_Init(INTPERIOD>>4);		// 65 ms. Debouncing
 	Timer2A_Init(INTPERIOD);			// time here. ADC0 sampling.
 //	Timer3A_Init();								// time here. ADC1 sampling.
 	
 // Last: Init Screen Output
 	Output_Init();
-	PrintSplash();
-	GrabCalibration();
+//	PrintSplash();
+//	GrabCalibration();
 	
 	// Activate Interrupts
 	EnableInterrupts(); 
 
 /* Main program loop */
 
-Output_Clear();
+	Output_Clear();
 
-int counter = 0;
-char number[10];
-uint8_t flag = 0;
+	char number[10];
 
 	while(1)
 	{
-		void WaitForInterrupt(void);
-		
-		counter += 1;
-		if ( !(counter % 1000000 ) )
-		{			
+		void WaitForInterrupt(void);		
 			
-			if( !flag )
-			{
-				sprintf(number, "ADC0 PE0: %03d%% Voltage", (data[0] * 100) / 4095);
-				ST7735_SetCursor(0, 0);
-				printf("%s", number);
-				
-				sprintf(number, "ADC0 PE1: %05d", data[1]);
-				ST7735_SetCursor(0, 1);
-				printf("%s", number);
-				
-				sprintf(number, "ADC0 PE2: %05d", data[2]);
-				ST7735_SetCursor(0, 2);
-				printf("%s", number);
-				
-				sprintf(number, "ADC0 PE3: %05d", data[3]);
-				ST7735_SetCursor(0, 3);
-				printf("%s", number);
+		if( callMPPT )
+		{
+			
+			read_dV(&V , &dV ) ;
+			read_dI(&I , &dI ) ;
+			int32_t step = incond (V , dV , I , dI ) ;		// Set step direction
+			//set_duty ( step   *STEPSIZE ) ;
+			//TIMER0_TAILR_R = period-1;       // Frequency of sine wave out of H-Bridge
+			
+			sprintf(number, "ADC0 PE0: %03d%% Voltage", (data[0] * 100) / 4095);
+			ST7735_SetCursor(0, 0);
+			printf("%s", number);
+			
+			sprintf(number, "ADC0 PE1: %05d", data[1]);
+			ST7735_SetCursor(0, 1);
+			printf("%s", number);
+			
+			sprintf(number, "ADC0 PE2: %05d", data[2]);
+			ST7735_SetCursor(0, 2);
+			printf("%s", number);
+			
+			sprintf(number, "ADC0 PE3: %05d", data[3]);
+			ST7735_SetCursor(0, 3);
+			printf("%s", number);
 
-				sprintf(number, "ADC0 PE4: %05d", data[4]);
-				ST7735_SetCursor(0, 4);
-				printf("%s", number);
-				
-				sprintf(number, "ADC0 PE5: %05d", data[5]);
-				ST7735_SetCursor(0, 5);
-				printf("%s", number);
-				
-				sprintf(number, "ADC0 PD2: %05d", data[6]);
-				ST7735_SetCursor(0, 6);
-				printf("%s", number);
-				
-				sprintf(number, "ADC0 PD3: %05d", data[7]);
-				ST7735_SetCursor(0, 7);
-				printf("%s", number);
-				
-				flag = 1;
-			}
+			sprintf(number, "ADC0 PE4: %05d", data[4]);
+			ST7735_SetCursor(0, 4);
+			printf("%s", number);
+			
+			sprintf(number, "ADC0 PE5: %05d", data[5]);
+			ST7735_SetCursor(0, 5);
+			printf("%s", number);
+			
+			sprintf(number, "ADC0 PD2: %05d", data[6]);
+			ST7735_SetCursor(0, 6);
+			printf("%s", number);
+			
+			sprintf(number, "ADC0 PD3: %05d", data[7]);
+			ST7735_SetCursor(0, 7);
+			printf("%s", number);
+			
+			sprintf(number, "MPPT Volts: %05d", V);
+			ST7735_SetCursor(0, 8);
+			printf("%s", number);
+			
+			callMPPT = 0;
 
-			else
-			{	
-				/*
-				sprintf(number, "ADC1 PE0: %05d", data[0]);
-				ST7735_SetCursor(0, 0);
-				printf("%s", number);
-				
-				sprintf(number, "ADC1 PE1: %05d", data[1]);
-				ST7735_SetCursor(0, 1);
-				printf("%s", number);
-				
-				sprintf(number, "ADC1 PE2: %05d", data[2]);
-				ST7735_SetCursor(0, 2);
-				printf("%s", number);
-				
-				sprintf(number, "ADC1 PE3: %05d", data[3]);
-				ST7735_SetCursor(0, 3);
-				printf("%s", number);
-
-				sprintf(number, "ADC1 PE4: %05d", data[4]);
-				ST7735_SetCursor(0, 4);
-				printf("%s", number);
-				
-				sprintf(number, "ADC1 PE5: %05d", data[5]);
-				ST7735_SetCursor(0, 5);
-				printf("%s", number);
-				
-				sprintf(number, "ADC1 PD2: %05d", data[6]);
-				ST7735_SetCursor(0, 6);
-				printf("%s", number);
-				
-				sprintf(number, "ADC1 PD3: %05d", data[7]);
-				ST7735_SetCursor(0, 7);
-				printf("%s", number);
-				*/
-				flag = 0;
-			}
-		}			
+		}
   }
 }
 

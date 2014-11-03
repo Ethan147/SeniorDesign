@@ -28,6 +28,7 @@
 #include "ADC.h"
 
 extern uint32_t data[8];
+extern uint8_t callMPPT;
 
 // There are many choices to make when using the ADC, and many
 // different combinations of settings will all do basically the
@@ -168,6 +169,8 @@ void ADC0Seq0_Handler(void){
   data[7] = ADC0_SSFIFO0_R&0xFFF;  // PD3) read eighth result	
   ADC0_ISC_R = 0x01;          		 // Last) acknowledge ADC sequence 0 completion
 	
+	callMPPT = 1;
+	
 }
 
 // NOTE: ADC1 is not currently assigned a timer.
@@ -193,5 +196,6 @@ void ADC1Seq0_Handler(void)
   data[6] = ADC1_SSFIFO0_R&0xFFF;  // PD2) read seventh result
   data[7] = ADC1_SSFIFO0_R&0xFFF;  // PD3) read eighth result
   ADC1_ISC_R = 0x0001;             // Last) acknowledge ADC sequence 0 completion	
+	
 }
 
