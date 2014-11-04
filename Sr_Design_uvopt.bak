@@ -115,6 +115,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>DLGTARM</Key>
           <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
@@ -126,11 +130,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>lmidk-agdi</Key>
-          <Name>-U -O4622 -S3 -FO29</Name>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
-          <Key>DLGUARM</Key>
+          <Name>-U-O4622 -O4622 -S3 -FO29</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -138,7 +138,40 @@
           <Name>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0TM4C123_32 -FS00 -FL08000)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>140</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>1492</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\switch.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\ST7735\switch.c\140</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>151</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>1550</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\switch.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\ST7735\switch.c\151</Expression>
+        </Bp>
+      </Breakpoint>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -187,8 +220,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>258</TopLine>
-      <CurrentLine>277</CurrentLine>
+      <TopLine>623</TopLine>
+      <CurrentLine>629</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup.s</PathWithFileName>
       <FilenameWithoutPath>startup.s</FilenameWithoutPath>
@@ -217,10 +250,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1071</TopLine>
+      <CurrentLine>1006</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\ST7735.c</PathWithFileName>
       <FilenameWithoutPath>ST7735.c</FilenameWithoutPath>
@@ -233,10 +266,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>22</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>9</TopLine>
-      <CurrentLine>10</CurrentLine>
+      <TopLine>296</TopLine>
+      <CurrentLine>314</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\timer.c</PathWithFileName>
       <FilenameWithoutPath>timer.c</FilenameWithoutPath>
@@ -249,10 +282,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>47</ColumnNumber>
+      <ColumnNumber>69</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>63</TopLine>
-      <CurrentLine>72</CurrentLine>
+      <TopLine>84</TopLine>
+      <CurrentLine>101</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\switch.c</PathWithFileName>
       <FilenameWithoutPath>switch.c</FilenameWithoutPath>
@@ -265,10 +298,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>24</ColumnNumber>
+      <ColumnNumber>1</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>60</TopLine>
-      <CurrentLine>77</CurrentLine>
+      <TopLine>168</TopLine>
+      <CurrentLine>196</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\ADC.c</PathWithFileName>
       <FilenameWithoutPath>ADC.c</FilenameWithoutPath>
@@ -297,10 +330,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>6</ColumnNumber>
+      <ColumnNumber>13</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>93</TopLine>
-      <CurrentLine>117</CurrentLine>
+      <TopLine>146</TopLine>
+      <CurrentLine>170</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\PWM.c</PathWithFileName>
       <FilenameWithoutPath>PWM.c</FilenameWithoutPath>
@@ -313,13 +346,45 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>48</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>74</TopLine>
-      <CurrentLine>91</CurrentLine>
+      <TopLine>266</TopLine>
+      <CurrentLine>280</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>10</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>39</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>84</TopLine>
+      <CurrentLine>19</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\MPPTmain.c</PathWithFileName>
+      <FilenameWithoutPath>MPPTmain.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>11</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>1</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>29</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>30</TopLine>
+      <CurrentLine>44</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\mpptfunctions.c</PathWithFileName>
+      <FilenameWithoutPath>mpptfunctions.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

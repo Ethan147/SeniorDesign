@@ -49,7 +49,7 @@
                                             // Register Low
 #define MAX_CHECKS 3	// # checks before a switch is debounced
 
-#define MAX_AMPLITUDE 39800.0
+#define MAX_AMPLITUDE 620.0
 
 /* Sine Data LookUp Table */
 //static const uint16_t sineTableOrig[256]={2884,2954,3025,3095,3165,3235,3305,3375,3444,3512,
