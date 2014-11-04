@@ -8,26 +8,28 @@ Project File Date:  11/03/2014
 
 <h2>Output:</h2>
 Build target 'Sr_Design'
-compiling PWM.c...
+compiling timer.c...
+timer.c(234): warning:  #177-D: variable "cycleCount" was declared but never referenced
+        static uint32_t cycleCount = 0;
+timer.c: 1 warning, 0 errors
+compiling main.c...
 linking...
-Program Size: Code=6844 RO-data=8516 RW-data=324 ZI-data=1060  
-".\ST7735.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=6848 RO-data=8516 RW-data=324 ZI-data=1060  
+".\ST7735.axf" - 0 Error(s), 1 Warning(s).
 Load "C:\\Users\\Colin\\Documents\\sr_design\\ST7735.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
-7735.axf" - 0 Error(s), 1 Warning(s).
+</pre>
+</body>
+</html>
+0  
+".\ST7735.axf" - 0 Error(s), 1 Warning(s).
 Load "C:\\Users\\Colin\\Documents\\sr_design\\ST7735.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
-ash Download failed  -  Target DLL has been cancelled
-Load "C:\\Users\\Colin\\Documents\\sr_design\\ST7735.axf" 
-Connecting: Mode=JTAG, Speed=1000000Hz
-Erase Done.
-Programming Done.
-Verify OK.
-735.axf" - 2 Error(s), 2 Warning(s).
+), 2 Warning(s).
 Target not created

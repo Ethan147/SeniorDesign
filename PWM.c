@@ -59,9 +59,9 @@ void PWM0_0_Init(void){
   GPIO_PORTB_PCTL_R |= 0x44000000;
   GPIO_PORTB_AMSEL_R &= ~0xC0;          				// disable analog functionality on PB6
   GPIO_PORTB_DEN_R |= 0xC0;             				// enable digital I/O on PB6
-  SYSCTL_RCC_R = SYSCTL_RCC_USEPWMDIV | 				// 3) use PWM divider
-      (SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M));   
-	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_M;						//  configure for no divider
+  SYSCTL_RCC_R |= SYSCTL_RCC_USEPWMDIV; // 3) use PWM divider
+  SYSCTL_RCC_R &= ~SYSCTL_RCC_PWMDIV_M; //    clear PWM divider field
+  SYSCTL_RCC_R += SYSCTL_RCC_PWMDIV_2;  //    configure for /2 divider
   //PWM0_0_CTL_R = 0;                     			// 4) re-loading down-counting mode									//Enable PWM	
 	//PWM0, Generator A (PWM0/PB6) goes to 0 when count==reload and 1 when count==0
 	PWM0_0_GENA_R = 0xC8;                 				// low on LOAD, high on CMPA down
@@ -70,8 +70,8 @@ void PWM0_0_Init(void){
 	PWM0_0_GENB_R = 0xC08;                 				// low on LOAD, high on CMPA down
 																								// PB7 goes low on LOAD
 																								// PB7 goes high on CMPA down
-  PWM0_0_LOAD_R = PWM_PERIOD - 1;           		// 5) cycles needed to count down to 0
-  PWM0_0_CMPA_R = (PWM_PERIOD >> 1) - 1;        // 6) Start at 50% duty cycle
+  PWM0_0_LOAD_R = (PWM_PERIOD >> 6) - 1;           		// 5) cycles needed to count down to 0
+  PWM0_0_CMPA_R = (PWM_PERIOD >> 8) - 1;        // 6) Start at 50% duty cycle
 	PWM0_0_CMPB_R = (PWM_PERIOD >> 1) - 1;        // 6) Start at 50% duty cycle
 	
 	PWM0_0_CTL_R |= 0x00000003;
@@ -96,7 +96,7 @@ void PWM0_1_Init(void){
   GPIO_PORTB_DEN_R |= 0x30;             				// enable digital I/O on PB4
   SYSCTL_RCC_R = SYSCTL_RCC_USEPWMDIV | 				// 3) use PWM divider
       (SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M));   
-	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_M;						//  configure for no divider
+	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_2;						//  configure for no divider
   //PWM0_0_CTL_R = 0;                     			// 4) re-loading down-counting mode									//Enable PWM
 	//PWM0, Generator A (PWM0/PB4) goes to 0 when count==reload and 1 when count==0
 	PWM0_1_GENA_R = 0xC8;                 				// low on LOAD, high on CMPA down
@@ -105,8 +105,8 @@ void PWM0_1_Init(void){
 	PWM0_1_GENB_R = 0xC08;                 				// low on LOAD, high on CMPA down
 																								// PB7 goes low on LOAD
 																								// PB7 goes high on CMPA down
-  PWM0_1_LOAD_R = PWM_PERIOD - 1;           		// 5) cycles needed to count down to 0
-  PWM0_1_CMPA_R = (PWM_PERIOD >> 1) - 1;        // 6) Start at 50% duty cycle
+  PWM0_1_LOAD_R = (PWM_PERIOD >> 6) - 1;           		// 5) cycles needed to count down to 0
+  PWM0_1_CMPA_R = (PWM_PERIOD >> 8) - 1;        // 6) Start at 50% duty cycle
 	PWM0_1_CMPB_R = (PWM_PERIOD >> 1) - 1;        // 6) Start at 50% duty cycle
 	
 	PWM0_1_CTL_R |= PWM_2_CTL_ENABLE;
@@ -136,12 +136,12 @@ void PWM0_3_Init(void){
 	
 	SYSCTL_RCC_R = SYSCTL_RCC_USEPWMDIV | 				// 3) use PWM divider
 		(SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M)); 
-	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_M;						//  configure for no divider
+	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_2;						//  configure for no divider
 	
   PWM0_3_CTL_R = 0;                     															// 4) re-loading mode
   PWM0_3_GENA_R = (PWM_3_GENA_ACTCMPAD_ONE|PWM_3_GENA_ACTLOAD_ZERO); 	//0xC8
-  PWM0_3_LOAD_R = PWM_PERIOD - 1;           													// 5) cycles needed to count down to 0
-  PWM0_3_CMPA_R = (PWM_PERIOD >> 1) - 1;             									// 6) count value when output rises
+  PWM0_3_LOAD_R = (PWM_PERIOD >> 6) - 1;           													// 5) cycles needed to count down to 0
+  PWM0_3_CMPA_R = (PWM_PERIOD >> 8) - 1;             									// 6) count value when output rises
   PWM0_3_CTL_R |= PWM_3_CTL_ENABLE;     															// 7) start PWM3
   PWM0_ENABLE_R |= PWM_ENABLE_PWM6EN; 																// enable PWM0
 }
@@ -149,19 +149,19 @@ void PWM0_3_Init(void){
 // change duty cycle of PB6
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0_0A_Duty(uint16_t duty){
-  PWM0_0_CMPA_R = duty - 1;             // 6) count value when output rises
+  PWM0_0_CMPA_R = (duty >> 7) - 1;             // 6) count value when output rises
 }
 
 // change duty cycle of PB7
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0_0B_Duty(uint16_t duty){
-  PWM0_0_CMPB_R = duty - 1;             // 6) count value when output rises
+  PWM0_0_CMPB_R = (duty >> 7) - 1;             // 6) count value when output rises
 }
 
 // change duty cycle of PB4
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0_1A_Duty(uint16_t duty){
-  PWM0_1_CMPA_R = duty - 1;             // 6) count value when output rises
+  PWM0_1_CMPA_R = duty - 1; //(duty >> 6) - 1;             // 6) count value when output rises
 }
 
 // change duty cycle of PB5
@@ -173,5 +173,5 @@ void PWM0_1B_Duty(uint16_t duty){
 // change duty cycle of PC4
 // duty is number of PWM clock cycles output is high  (2<=duty<=period-1)
 void PWM0_3A_Duty(uint16_t duty){
-  SPWM0_3_CMPA_R = duty - 1;             // 6) count value when output rises
+  PWM0_3_CMPA_R = duty - 1;             // 6) count value when output rises
 }
