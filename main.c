@@ -58,7 +58,7 @@ void GrabCalibration(void);
 
 /********************** Externs ************************/
 
-extern uint8_t index;
+//extern uint8_t index;
 
 /********************** Globals ************************/
 
@@ -138,7 +138,7 @@ int main(void)
 			ST7735_SetCursor(0, 3);
 			printf("%s", number);
 
-			sprintf(number, "ADC0 PE4: %05d", data[4]);
+			sprintf(number, "ADC0 PE4: %05f A", ((double) data[4] - 3100.0) / 44.0);
 			ST7735_SetCursor(0, 4);
 			printf("%s", number);
 			
