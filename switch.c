@@ -62,7 +62,7 @@
 #define LEDS      (*((volatile uint32_t *)0x40025038))
 #define RED       0x02
 #define BLUE      0x04
-
+#define GetPeriod(x)					80000000 / (256*x)
 /* Prototypes */
 
 void DisableInterrupts(void); // Disable interrupts
@@ -78,6 +78,9 @@ void WaitForInterrupt(void);  // low power mode
 extern uint8_t continueFlag;
 extern uint8_t printFlag;
 extern uint32_t motorConstant;
+extern uint32_t frequency;
+
+extern uint8_t callMPPT;
 
 /* Implementation */
 
@@ -87,11 +90,11 @@ void Switch_Init(void){
   SYSCTL_RCGC2_R |= 0x00000020; 		// (a) activate clock for port F
   delay = SYSCTL_RCGC2_R;           // allow time for clock to start
 	GPIO_PORTF_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port F
-	GPIO_PORTF_CR_R = 0x1F;           // allow changes to PF4 - PF1
+	GPIO_PORTF_CR_R = 0x1F;           // allow changes to PF4 - PF0
 	GPIO_PORTF_DIR_R &= ~0x1F;    		// (c) make PF4 - PF1 input
   GPIO_PORTF_AFSEL_R &= ~0x1F;  		//     disable alt funct on PF4 - PF1
   GPIO_PORTF_DEN_R |= 0x1F;     		//     enable digital I/O on PF4 - PF1 
-	GPIO_PORTF_PCTL_R = 0x0000FFFF; 	// configure PF4 - PF1 as GPIO 
+	GPIO_PORTF_PCTL_R = 0x000FFFFF; 	// configure PF4 - PF1 as GPIO 
 	GPIO_PORTF_AMSEL_R = 0;       		//     disable analog functionality on PF
 	GPIO_PORTF_AMSEL_R &= ~(0x00);
   GPIO_PORTF_IS_R &= ~0x1F;     		// (d) PF3-1 is edge-sensitive
@@ -109,25 +112,28 @@ void GPIOPortF_Handler(void)
 {
 	int32_t sr;
 
-		if( GPIO_PORTF_DATA_R & 0x01)	//PF0
+		if( GPIO_PORTF_RIS_R & 0x01)	//PF0
 		{
 			//Switch 1 Handler
 			GPIO_PORTF_ICR_R |= 0x01;      // acknowledge flag
 			sr = StartCritical();
-
 			Timer1A_Enable();
+			
+			frequency = (frequency == 60) ? 15 : (frequency + 1);
+			
+			TIMER0_TAILR_R = GetPeriod(frequency) - 1;
 			EndCritical(sr);
 		}	
-		if( GPIO_PORTF_DATA_R & 0x02)	//PF1
+		if( GPIO_PORTF_RIS_R & 0x02)	//PF1
 		{
 			//Switch 1 Handler
 			GPIO_PORTF_ICR_R |= 0x02;      // acknowledge flag
 			sr = StartCritical();
-
+			
 			Timer1A_Enable();
 			EndCritical(sr);
 		}
-		if( GPIO_PORTF_DATA_R & 0x04)	//PF2
+		if( GPIO_PORTF_RIS_R & 0x04)	//PF2
 		{
 			//Switch 2 Handler
 			GPIO_PORTF_ICR_R |= 0x04;      // acknowledge flag
@@ -139,7 +145,7 @@ void GPIOPortF_Handler(void)
 			printFlag = 1;
 			EndCritical(sr);
 		}
-		if( GPIO_PORTF_DATA_R & 0x08)	//PF3	
+		if( GPIO_PORTF_RIS_R & 0x08)	//PF3	
 		{
 			//Switch 3 Handler
 			GPIO_PORTF_ICR_R |= 0x08;      // acknowledge flag
@@ -150,7 +156,7 @@ void GPIOPortF_Handler(void)
 			printFlag = 1;
 			EndCritical(sr);
 		}
-		if( GPIO_PORTF_DATA_R & 0x10)	//PF4	
+		if( GPIO_PORTF_RIS_R & 0x10)	//PF4	
 		{
 			//Switch 4 Handler
 			GPIO_PORTF_ICR_R |= 0x10;      // acknowledge flag
@@ -159,6 +165,9 @@ void GPIOPortF_Handler(void)
 			Timer1A_Enable();
 			continueFlag = 1;
 			EndCritical(sr);
-		}		
+		}	
+
+		callMPPT = 1;
+		
 }
 

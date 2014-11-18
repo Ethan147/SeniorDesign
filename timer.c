@@ -49,7 +49,7 @@
                                             // Register Low
 #define MAX_CHECKS 3	// # checks before a switch is debounced
 
-#define MAX_AMPLITUDE 620.0
+#define MAX_AMPLITUDE 600 // 620.0
 
 /* Sine Data LookUp Table */
 //static const uint16_t sineTableOrig[256]={2884,2954,3025,3095,3165,3235,3305,3375,3444,3512,
@@ -246,6 +246,12 @@ void Timer0A_Handler(void)
 	phaseThree += 1;
 	phaseThree &= 0x0FF;
 	
+	phaseOneSingle += 1;
+	phaseOneSingle &= 0x0FF;
+	
+	phaseTwoSingle += 1;
+	phaseTwoSingle &= 0x0FF;	
+	
 	sineOutput = FloatMultiply(sineTable[phaseOne], amplitude);
 	castFloat = sineOutput;
 	PWM0_1B_Duty( castFloat);
@@ -257,6 +263,16 @@ void Timer0A_Handler(void)
 	sineOutput = FloatMultiply(sineTable[phaseThree], amplitude);
 	castFloat = sineOutput;
 	PWM0_1A_Duty( castFloat);
+
+// Single Phase Output
+
+//	sineOutput = FloatMultiply(sineTable[phaseOneSingle], amplitude);
+//	castFloat = sineOutput;
+//	PWM0_1A_Duty( castFloat);
+//	
+//	sineOutput = FloatMultiply(sineTable[phaseTwoSingle], amplitude);
+//	castFloat = sineOutput;
+//	PWM0_1B_Duty( castFloat);	
 
 	EndCritical(sr);
 }
@@ -270,12 +286,12 @@ void Timer0A_Handler(void)
 uint32_t lastVal = 0;
 void Timer1A_Handler(void)
 {
-	uint32_t curVal = GPIO_PORTF_DATA_R & 0x1E;
+	uint32_t curVal = GPIO_PORTF_DATA_R & 0x1F;
 	TIMER1_ICR_R = TIMER_ICR_TATOCINT;
 	if(curVal == lastVal && curVal == 0)
 	{
 		//Enable Switch Interrupt
-		GPIO_PORTF_IM_R |= 0x1E;
+		GPIO_PORTF_IM_R |= 0x1F;
 		//Disable Self
 		Timer1A_Disable();
 	}

@@ -29,9 +29,17 @@
 
 /* Constants */
 
+// Three Phase
+
 static uint32_t phaseOne = 0;
 static uint32_t phaseTwo = 85;
 static uint32_t phaseThree = 171;
+
+// Single Phase
+
+static uint32_t phaseOneSingle = 85;
+static uint32_t phaseTwoSingle = 171;
+
 static const float sineTable[256]=
 {
 	0.513715711,0.526184539,0.538831493,0.551300321,0.563769149,0.576237976,0.588706804,0.601175632,
