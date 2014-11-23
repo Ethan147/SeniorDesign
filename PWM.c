@@ -61,7 +61,7 @@ void PWM0_0_Init(void){
   GPIO_PORTB_DEN_R |= 0xC0;             				// enable digital I/O on PB6
   SYSCTL_RCC_R |= SYSCTL_RCC_USEPWMDIV; // 3) use PWM divider
   SYSCTL_RCC_R &= ~SYSCTL_RCC_PWMDIV_M; //    clear PWM divider field
-  SYSCTL_RCC_R += SYSCTL_RCC_PWMDIV_2;  //    configure for /2 divider
+  SYSCTL_RCC_R += SYSCTL_RCC_PWMDIV_16;  //    configure for /2 divider
   //PWM0_0_CTL_R = 0;                     			// 4) re-loading down-counting mode									//Enable PWM	
 	//PWM0, Generator A (PWM0/PB6) goes to 0 when count==reload and 1 when count==0
 	PWM0_0_GENA_R = 0xC8;                 				// low on LOAD, high on CMPA down
@@ -96,7 +96,7 @@ void PWM0_1_Init(void){
   GPIO_PORTB_DEN_R |= 0x30;             				// enable digital I/O on PB4
   SYSCTL_RCC_R = SYSCTL_RCC_USEPWMDIV | 				// 3) use PWM divider
       (SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M));   
-	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_2;						//  configure for no divider
+	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_4;						//  configure for no divider
   //PWM0_0_CTL_R = 0;                     			// 4) re-loading down-counting mode									//Enable PWM
 	//PWM0, Generator A (PWM0/PB4) goes to 0 when count==reload and 1 when count==0
 	PWM0_1_GENA_R = 0xC8;                 				// low on LOAD, high on CMPA down
@@ -136,7 +136,7 @@ void PWM0_3_Init(void){
 	
 	SYSCTL_RCC_R = SYSCTL_RCC_USEPWMDIV | 				// 3) use PWM divider
 		(SYSCTL_RCC_R & (~SYSCTL_RCC_PWMDIV_M)); 
-	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_2;						//  configure for no divider
+	SYSCTL_RCC_R+=SYSCTL_RCC_PWMDIV_4;						//  configure for no divider
 	
   PWM0_3_CTL_R = 0;                     															// 4) re-loading mode
   PWM0_3_GENA_R = (PWM_3_GENA_ACTCMPAD_ONE|PWM_3_GENA_ACTLOAD_ZERO); 	//0xC8

@@ -94,7 +94,7 @@ void Switch_Init3(void);
 //         0x00 if PB1 is low
 uint32_t Switch_Input3(void); 
 
-
+void Comm_Init(void);
 void GPIOPortF_Handler(void);
 
 long StartCritical (void);    // previous I bit, disable interrupts

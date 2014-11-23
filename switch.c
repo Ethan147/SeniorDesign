@@ -114,12 +114,27 @@ void GPIOPortF_Handler(void)
 
 		if( GPIO_PORTF_RIS_R & 0x01)	//PF0
 		{
+			int mask = 0x01;
 			//Switch 1 Handler
 			GPIO_PORTF_ICR_R |= 0x01;      // acknowledge flag
 			sr = StartCritical();
 			Timer1A_Enable();
 			
-			frequency = (frequency == 60) ? 15 : (frequency + 1);
+			frequency = (frequency == 30) ? 0 : (frequency + 1);
+			
+			// set GPIO pins to communicate frequency to other board
+			for(;mask < 0x0F ; mask *= 2){
+				if(frequency & mask){
+					GPIO_PORTB_DATA_R |= mask;
+				}else{
+					GPIO_PORTB_DATA_R &= ~(mask);
+				}
+	  	}
+			if(frequency & mask){
+				GPIO_PORTC_DATA_R |= 0x40;
+			}else{
+				GPIO_PORTC_DATA_R &= ~(0x40);
+			}
 			
 			TIMER0_TAILR_R = GetPeriod(frequency) - 1;
 			EndCritical(sr);
@@ -169,5 +184,30 @@ void GPIOPortF_Handler(void)
 
 		callMPPT = 1;
 		
+}
+
+void Comm_Init(){
+	uint32_t delay;
+   SYSCTL_RCGCGPIO_R |= 0x02; 		// (a) activate clock for port B
+  delay = SYSCTL_RCGC2_R;           // allow time for clock to start
+	GPIO_PORTB_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port B
+	GPIO_PORTB_CR_R = 0x0F;           // allow changes to PB3 - PB0
+	GPIO_PORTB_DIR_R |= 0x0F;    		// (c) make PB3 - PB0 output
+  GPIO_PORTB_AFSEL_R &= ~0x0F;  		//     disable alt funct on PB3 - PB0
+  GPIO_PORTB_DEN_R |= 0x0F;     		//     enable digital I/O on PB3 - PB0
+	GPIO_PORTB_PCTL_R = 0x0000FFFF; 	// configure PB3 - PB0 as GPIO 
+	GPIO_PORTB_AMSEL_R = 0;       		//     disable analog functionality on PB
+	GPIO_PORTB_AMSEL_R &= ~(0x00);
+	
+  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOC; 		// 2) activate port C
+  delay = SYSCTL_RCGC2_R;           // allow time for clock to start
+	GPIO_PORTC_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port C
+	GPIO_PORTC_CR_R = 0x40;           // allow changes to PC6
+	GPIO_PORTC_DIR_R |= 0x40;    		// (c) make PC6 output
+  GPIO_PORTC_AFSEL_R &= ~0x40;  		//     disable alt funct on PC6
+  GPIO_PORTC_DEN_R |= 0x40;     		//     enable digital I/O on PC6
+	GPIO_PORTC_PCTL_R = 0x0F000000; 	// configure PC5 as GPIO 
+	GPIO_PORTC_AMSEL_R = 0;       		//     disable analog functionality on PC6
+	GPIO_PORTC_AMSEL_R &= ~(0x00);
 }
 

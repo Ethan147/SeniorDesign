@@ -55,7 +55,7 @@ void GrabCalibration(void);
 #define SYSCTL_RCGC2_GPIOF      0x00000020  // port F Clock Gating Control
 #define INTPERIOD              	80000000    // interrupt period (80MHz cycles)
 #define SIXTYHZPERIOD              	5208    // interrupt period (80MHz cycles)
-#define GetPeriod(x)					INTPERIOD / (256*x)
+#define GetPeriod(x)					INTPERIOD / (250*x)
 
 /********************** Externs ************************/
 
@@ -72,7 +72,7 @@ uint32_t I;
 int32_t dV;
 int32_t dI;
 
-uint32_t frequency = 30;
+uint32_t frequency = 0;
 
 /******************* Implementation ********************/
 
@@ -91,6 +91,8 @@ int main(void)
 	
 	ADC0_Init();
 	
+	Comm_Init();
+	
 // Software	
 	// Timer Interrupts
 	Timer0A_Init(GetPeriod(frequency));		// time here. PWM shifting.
@@ -100,8 +102,8 @@ int main(void)
 	
 // Last: Init Screen Output
 	Output_Init();
-	PrintSplash();
-	GrabCalibration();
+	//PrintSplash();
+	//GrabCalibration();
 	
 	// Activate Interrupts
 	EnableInterrupts(); 

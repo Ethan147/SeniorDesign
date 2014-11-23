@@ -49,7 +49,7 @@
                                             // Register Low
 #define MAX_CHECKS 3	// # checks before a switch is debounced
 
-#define MAX_AMPLITUDE 600 // 620.0
+#define MAX_AMPLITUDE 580 // 620.0
 
 /* Sine Data LookUp Table */
 //static const uint16_t sineTableOrig[256]={2884,2954,3025,3095,3165,3235,3305,3375,3444,3512,
@@ -238,18 +238,33 @@ void Timer0A_Handler(void)
 	sr = StartCritical();
 	
 	phaseOne += 1;
+	if(phaseOne == 250){
+		phaseOne = 0;
+	}
 	phaseOne &= 0x0FF;
 	
 	phaseTwo += 1;
+	if(phaseTwo == 250){
+		phaseTwo = 0;
+	}
 	phaseTwo &= 0x0FF;
 	
 	phaseThree += 1;
+	if(phaseThree == 250){
+		phaseThree = 0;
+	}
 	phaseThree &= 0x0FF;
 	
 	phaseOneSingle += 1;
+	if(phaseOneSingle == 250){
+		phaseOneSingle = 0;
+	}
 	phaseOneSingle &= 0x0FF;
 	
 	phaseTwoSingle += 1;
+	if(phaseTwoSingle == 250){
+		phaseTwoSingle = 0;
+	}
 	phaseTwoSingle &= 0x0FF;	
 	
 	sineOutput = FloatMultiply(sineTable[phaseOne], amplitude);
