@@ -120,7 +120,7 @@ void GPIOPortF_Handler(void)
 			sr = StartCritical();
 			Timer1A_Enable();
 			
-			frequency = (frequency == 30) ? 0 : (frequency + 1);
+			frequency = (frequency == 15) ? 0 : (frequency + 1);
 			
 			// set GPIO pins to communicate frequency to other board
 			for(;mask < 0x0F ; mask *= 2){
@@ -130,11 +130,11 @@ void GPIOPortF_Handler(void)
 					GPIO_PORTB_DATA_R &= ~(mask);
 				}
 	  	}
-			if(frequency & mask){
-				GPIO_PORTC_DATA_R |= 0x40;
-			}else{
-				GPIO_PORTC_DATA_R &= ~(0x40);
-			}
+//			if(frequency & mask){
+//				GPIO_PORTC_DATA_R |= 0x40;
+//			}else{
+//				GPIO_PORTC_DATA_R &= ~(0x40);
+//			}
 			
 			TIMER0_TAILR_R = GetPeriod(frequency) - 1;
 			EndCritical(sr);
@@ -198,16 +198,16 @@ void Comm_Init(){
 	GPIO_PORTB_PCTL_R = 0x0000FFFF; 	// configure PB3 - PB0 as GPIO 
 	GPIO_PORTB_AMSEL_R = 0;       		//     disable analog functionality on PB
 	GPIO_PORTB_AMSEL_R &= ~(0x00);
-	
-  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOC; 		// 2) activate port C
-  delay = SYSCTL_RCGC2_R;           // allow time for clock to start
-	GPIO_PORTC_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port C
-	GPIO_PORTC_CR_R = 0x40;           // allow changes to PC6
-	GPIO_PORTC_DIR_R |= 0x40;    		// (c) make PC6 output
-  GPIO_PORTC_AFSEL_R &= ~0x40;  		//     disable alt funct on PC6
-  GPIO_PORTC_DEN_R |= 0x40;     		//     enable digital I/O on PC6
-	GPIO_PORTC_PCTL_R = 0x0F000000; 	// configure PC5 as GPIO 
-	GPIO_PORTC_AMSEL_R = 0;       		//     disable analog functionality on PC6
-	GPIO_PORTC_AMSEL_R &= ~(0x00);
+//	
+//  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOC; 		// 2) activate port C
+//  delay = SYSCTL_RCGC2_R;           // allow time for clock to start
+//	GPIO_PORTC_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port C
+//	GPIO_PORTC_CR_R = 0x40;           // allow changes to PC6
+//	GPIO_PORTC_DIR_R |= 0x40;    		// (c) make PC6 output
+//  GPIO_PORTC_AFSEL_R &= ~0x40;  		//     disable alt funct on PC6
+//  GPIO_PORTC_DEN_R |= 0x40;     		//     enable digital I/O on PC6
+//	GPIO_PORTC_PCTL_R = 0x0F000000; 	// configure PC5 as GPIO 
+//	GPIO_PORTC_AMSEL_R = 0;       		//     disable analog functionality on PC6
+//	GPIO_PORTC_AMSEL_R &= ~(0x00);
 }
 

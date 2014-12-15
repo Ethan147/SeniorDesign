@@ -72,7 +72,7 @@ uint32_t I;
 int32_t dV;
 int32_t dI;
 
-uint32_t frequency = 0;
+uint32_t frequency = 15;
 
 /******************* Implementation ********************/
 
