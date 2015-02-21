@@ -1,1 +1,0 @@
-.\mpptmain.o: MPPTmain.c
